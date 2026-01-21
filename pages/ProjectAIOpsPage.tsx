@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { getAssetPath } from '../utils';
 
 const ProjectAIOpsPage: React.FC = () => {
   const [showTestModal, setShowTestModal] = useState(false);
@@ -169,7 +170,7 @@ const ProjectAIOpsPage: React.FC = () => {
                 </div>
                 <div className="flex-1 bg-slate-800/50 rounded-xl border border-white/5 overflow-hidden relative group min-h-[400px]">
                   <img 
-                    src="/images/ai_ops_pre_launch_test.png" 
+                    src={getAssetPath('/images/ai_ops_pre_launch_test.png')} 
                     alt="Pre-launch Test" 
                     className="w-full h-full object-contain z-10 relative hidden"
                     onLoad={(e) => e.currentTarget.classList.remove('hidden')}
@@ -199,7 +200,7 @@ const ProjectAIOpsPage: React.FC = () => {
                 </div>
                 <div className="flex-1 bg-slate-800/50 rounded-xl border border-white/5 overflow-hidden relative group min-h-[400px]">
                   <img 
-                    src="/images/ai_ops_model_comparison.png" 
+                    src={getAssetPath('/images/ai_ops_model_comparison.png')} 
                     alt="Model Comparison" 
                     className="w-full h-full object-contain z-10 relative hidden"
                     onLoad={(e) => e.currentTarget.classList.remove('hidden')}

@@ -102,43 +102,47 @@ const ProjectCommunityGenPage: React.FC = () => {
         </div>
 
         <div className="space-y-6 flex flex-col">
-           <div className="glass-card p-5 rounded-2xl bg-slate-900/80 border border-white/10 flex-1 hover:bg-slate-800/60 transition-colors">
-              <h3 className="text-base font-bold text-slate-500 uppercase tracking-widest mb-6 flex items-center">
-                <i className="fas fa-lightbulb mr-3 text-cyan-400"></i> 核心优势与迭代思考
-              </h3>
-              
-              <ul className="space-y-6">
-                 <li className="flex items-start">
-                    <i className="fas fa-check text-green-400 mt-1 mr-3 text-sm"></i>
-                    <div>
-                       <div className="text-base font-bold text-white mb-1">数据驱动的内容质量</div>
-                       <p className="text-base text-slate-400 leading-relaxed">利用平台存量房数据 + 联网搜索能力，生成内容比人工编辑更全面、更客观、更有数据支撑。</p>
-                    </div>
-                 </li>
-                 <li className="flex items-start">
-                    <i className="fas fa-check text-green-400 mt-1 mr-3 text-sm"></i>
-                    <div>
-                       <div className="flex items-center gap-2 mb-1">
-                          <div className="text-base font-bold text-white">用户偏好洞察</div>
-                          <button 
-                            onClick={() => setShowAnalysisModal(true)}
-                            className="px-2 py-0.5 rounded bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 text-xs font-bold border border-cyan-500/30 transition-colors flex items-center"
-                          >
-                            <i className="fas fa-chart-pie mr-1"></i> 查看分析
-                          </button>
-                       </div>
-                       <p className="text-base text-slate-400 leading-relaxed">根据测评内容自动生成针对性的咨询引导短语，间接观测并收集用户的关注点与偏好。</p>
-                    </div>
-                 </li>
-                 <li className="flex items-start">
-                    <i className="fas fa-exclamation-triangle text-orange-400 mt-1 mr-3 text-sm"></i>
-                    <div>
-                       <div className="text-base font-bold text-white mb-1">待优化方向</div>
-                       <p className="text-base text-slate-400 leading-relaxed">平台基础数据维护仍需加强；联网搜索能力有提升空间；可快速复用到分站以满足扩张需求。</p>
-                    </div>
-                 </li>
-              </ul>
-           </div>
+           <div className="glass-card p-5 rounded-2xl bg-slate-900/80 border border-white/10 flex-1 hover:bg-slate-800/60 transition-colors flex flex-col">
+             <h3 className="text-base font-bold text-slate-500 uppercase tracking-widest mb-6 flex items-center">
+               <i className="fas fa-lightbulb mr-3 text-cyan-400"></i> 当前应用与未来规划
+             </h3>
+             
+             <div className="space-y-6 flex-1">
+                <div className="flex items-start">
+                   <i className="fas fa-check-circle text-green-400 mt-1 mr-3 text-sm"></i>
+                   <div>
+                      <div className="text-base font-bold text-white mb-1">已快速应用到分站</div>
+                      <p className="text-sm text-slate-400 leading-relaxed">
+                         基于<span className="text-cyan-400">“查成交”</span>功能抓取贝壳小区数据，结合地图 SDK 配套数据与联网数据（贝壳等优质源）自动生产。
+                         <br/><span className="text-xs text-slate-500 mt-1 block">运营仅需审核内容质量，生产环节 0 介入。</span>
+                      </p>
+                   </div>
+                </div>
+                
+                <div className="flex items-start">
+                   <i className="fas fa-layer-group text-cyan-400 mt-1 mr-3 text-sm"></i>
+                   <div>
+                      <div className="text-base font-bold text-white mb-1">AIGC 上下文基石</div>
+                      <p className="text-sm text-slate-400 leading-relaxed">
+                         生成的结构化测评数据，反向作为其他 AIGC 应用（如智能对话、推荐系统）的 <span className="text-cyan-400 font-bold">核心 Context 数据</span>。
+                      </p>
+                   </div>
+                </div>
+
+                <div className="p-4 rounded-xl border border-dashed border-white/20 bg-white/5 mt-auto">
+                   <div className="text-xs text-slate-500 uppercase font-bold mb-2 tracking-wider">Future Planning</div>
+                   <div className="flex items-start">
+                      <i className="fas fa-star text-yellow-400 mt-1 mr-2 text-xs"></i>
+                      <div>
+                         <div className="text-sm font-bold text-slate-200">全场景内容自动化</div>
+                         <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                            延伸至淘房圈动态、公众号文章等场景，自动生成小区分析与房源描述，实现内容矩阵的自动化填充。
+                         </p>
+                      </div>
+                   </div>
+                </div>
+             </div>
+          </div>
 
            <div className="p-5 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-xl border border-cyan-500/30 flex items-center justify-between">
               <div>

@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { getAssetPath } from '../utils';
 
 const ProjectSmartReplyPage: React.FC = () => {
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
@@ -117,37 +118,50 @@ const ProjectSmartReplyPage: React.FC = () => {
               </div>
            </div>
 
-           {/* User Feedback Simulation */}
-           <div className="glass-card p-5 rounded-2xl bg-slate-900/80 border border-white/10 flex flex-col flex-1 hover:bg-slate-800/60 transition-colors">
-              <h3 className="text-base font-bold text-slate-500 uppercase tracking-widest mb-5 flex items-center">
-                <i className="fas fa-comment-dots mr-2 text-purple-400"></i> 用户真实反馈
-              </h3>
-              
-              <div className="flex-1 space-y-4 overflow-y-auto pr-2 custom-scrollbar max-h-[250px]">
-                 <div className="flex items-start space-x-3 flex-row-reverse space-x-reverse">
-                    <div className="w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center text-xs font-bold">经纪人</div>
-                    <div className="bg-purple-500/20 p-4 rounded-2xl rounded-tr-none text-base text-white max-w-[85%] border border-purple-500/30 leading-relaxed">
-                       暂时没啥问题，比之前要好很多！平时带看忙来不及回复的时候会很好用。
-                    </div>
-                 </div>
-                  <div className="flex items-start space-x-3 flex-row-reverse space-x-reverse">
-                    <div className="w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center text-xs font-bold">经纪人</div>
-                    <div className="bg-purple-500/20 p-4 rounded-2xl rounded-tr-none text-base text-white max-w-[85%] border border-purple-500/30 leading-relaxed">
-                       而且 AI 话术也挺好，不像是机器人回复的。有时候我自己回复都不一定能写这么详细 😂😂
-                    </div>
-                 </div>
-              </div>
-              
-              <button 
-                onClick={() => setShowFeedbackModal(true)}
-                className="w-full mt-5 py-3 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 text-purple-300 font-bold flex items-center justify-center transition-all group"
-              >
-                <i className="fas fa-images mr-2 group-hover:scale-110 transition-transform"></i>
-                查看留资案例及用户反馈 (View Cases & Feedback)
-              </button>
-           </div>
-        </div>
-      </div>
+           {/* Response Efficiency & Guidance */}
+          <div className="glass-card p-5 rounded-2xl bg-slate-900/80 border border-white/10 flex flex-col flex-1 hover:bg-slate-800/60 transition-colors">
+             <div className="flex items-center justify-between mb-5">
+                <h3 className="text-base font-bold text-slate-500 uppercase tracking-widest flex items-center">
+                  <i className="fas fa-rocket mr-2 text-purple-400"></i> 线索承接提效
+                </h3>
+                <span className="text-[10px] bg-white/10 text-slate-300 px-2 py-0.5 rounded border border-white/5">Future Planning</span>
+             </div>
+             
+             <div className="flex-1 space-y-6">
+                <div className="p-3 bg-purple-500/10 rounded-lg border border-purple-500/20">
+                   <div className="text-xs text-purple-300 font-bold mb-1">规划背景</div>
+                   <p className="text-xs text-slate-400 leading-relaxed">
+                      建立在前期智能回复能力建设之上，复用已成熟的意图识别与上下文分析能力。
+                   </p>
+                </div>
+
+                <div className="flex items-start">
+                   <div className="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 flex-shrink-0 mt-1">
+                      <i className="fas fa-wand-magic-sparkles"></i>
+                   </div>
+                   <div className="ml-4">
+                      <h4 className="text-lg font-bold text-white mb-2">话术指导 & 辅助回复</h4>
+                      <p className="text-base text-slate-400 leading-relaxed">
+                         在经纪人承接线索时，AI 实时分析上下文，提供<span className="text-purple-400 font-bold">推荐回复话术</span>。经纪人可一键发送，无需手动编辑，显著降低沟通门槛与时间成本。
+                      </p>
+                   </div>
+                </div>
+                
+                <div className="flex items-start">
+                   <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 flex-shrink-0 mt-1">
+                      <i className="fas fa-robot"></i>
+                   </div>
+                   <div className="ml-4">
+                      <h4 className="text-lg font-bold text-white mb-2">高频场景自动回复</h4>
+                      <p className="text-base text-slate-400 leading-relaxed">
+                         针对用户的高频咨询场景（如：房源状态查询、基础信息核对），系统支持<span className="text-emerald-400 font-bold">自动托管回复</span>，确保“秒级响应”，最大化留住线索。
+                      </p>
+                   </div>
+                </div>
+             </div>
+          </div>
+       </div>
+     </div>
 
       {/* Image Modal */}
       {showFeedbackModal && (
@@ -170,7 +184,7 @@ const ProjectSmartReplyPage: React.FC = () => {
             
             <div className="flex gap-6 w-full h-full overflow-x-auto p-4 items-center snap-x snap-mandatory custom-scrollbar">
               {[1, 2, 3, 4, 5].map((num) => (
-                <div key={num} className="flex-none w-[85vw] md:w-[600px] h-full bg-slate-800/50 rounded-2xl overflow-hidden border border-white/10 flex items-center justify-center p-2 snap-center relative group cursor-zoom-in" onClick={() => window.open(`/images/feedback_${num}.png`, '_blank')}>
+                <div key={num} className="flex-none w-[85vw] md:w-[600px] h-full bg-slate-800/50 rounded-2xl overflow-hidden border border-white/10 flex items-center justify-center p-2 snap-center relative group cursor-zoom-in" onClick={() => window.open(getAssetPath(`/images/feedback_${num}.png`), '_blank')}>
                   <div className="absolute top-4 right-4 bg-black/60 text-white text-xs px-2 py-1 rounded backdrop-blur-md border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity">
                     <i className="fas fa-search-plus mr-1"></i> 点击查看大图
                   </div>
@@ -178,7 +192,7 @@ const ProjectSmartReplyPage: React.FC = () => {
                     Case {num}
                   </div>
                   <img 
-                    src={`/images/feedback_${num}.png`} 
+                    src={getAssetPath(`/images/feedback_${num}.png`)} 
                     alt={`Feedback Case ${num}`} 
                     className="max-w-full max-h-full object-contain rounded-lg shadow-2xl transition-transform duration-300 group-hover:scale-[1.02]" 
                   />

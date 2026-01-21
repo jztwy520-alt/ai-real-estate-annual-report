@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { getAssetPath } from '../utils';
 
 const ResearchCard = ({ title, subTitle, icon, color, children, onDemoClick }: any) => (
   <div className={`glass-card p-5 rounded-2xl flex flex-col h-full border-t-4 border-t-${color}-500`}>
@@ -43,10 +44,10 @@ const RiskControlPage: React.FC = () => {
 
   const handleDemoClick = (type: string) => {
     if (type === 'beike') {
-      setDemoUrl('/demos/beike_demo.html');
+      setDemoUrl(getAssetPath('/demos/beike_demo.html'));
       setDemoTitle('贝壳来客功能演示');
     } else if (type === 'zhuge') {
-      setDemoUrl('/demos/zhuge_demo.html');
+      setDemoUrl(getAssetPath('/demos/zhuge_demo.html'));
       setDemoTitle('诸葛云小助功能演示');
     }
     setShowDemoModal(true);
@@ -74,10 +75,10 @@ const RiskControlPage: React.FC = () => {
           onDemoClick={handleDemoClick}
         >
           <p>
-            <strong className="text-slate-200">核心洞察:</strong> 竞品（贝壳/诸葛）已完成从单点工具向<span className="text-cyan-400">“7x24h 数智员工”</span>的进化。
+            <strong className="text-slate-200">核心洞察:</strong> 竞品（贝壳/诸葛）正处于从单点工具向<span className="text-cyan-400">“7x24h 数智员工”</span>进化的过程中。
           </p>
           <p>
-            不仅仅是自动通过好友，更实现了“全渠道引流 → 自动清洗打标 → SOP标准触达 → 商机归因”的全链路闭环。
+            <strong className="text-slate-200">现状:</strong> <span className="text-slate-400 italic">进化尚未完成。</span> 虽然在尝试打通全链路闭环，但在复杂场景处理上仍有局限。
           </p>
           <div className="pt-2 border-t border-white/5 mt-2">
              <span className="text-slate-500">启示:</span> 需打通公域触点，构建全域自动化体系。
@@ -85,19 +86,22 @@ const RiskControlPage: React.FC = () => {
         </ResearchCard>
 
         <ResearchCard 
-          title="房源系统基建" 
-          subTitle="数据治理" 
-          icon="fa-database" 
-          color="purple"
+          title="反面案例：Q房网 ERP" 
+          subTitle="Lessons Learned" 
+          icon="fa-triangle-exclamation" 
+          color="red"
         >
           <p>
-            <strong className="text-slate-200">楼盘字典:</strong> 坚持“城市-城区-小区-楼栋-单元-门牌”的六级唯一性校验，是数据治理的核心。
+            <strong className="text-slate-200">AI 程度低:</strong> 仍停留在传统的“人海战术”维护阶段，大量基础内容需人工填报。
           </p>
           <p>
-            <strong className="text-slate-200">角色分权:</strong> 精细化的房源维护角色（维护人、实勘人等）与业绩强挂钩，驱动数据鲜活度。
+            <strong className="text-slate-200">无效字段冗余:</strong> 系统包含大量无实际业务价值的字段，造成数据噪音。
+          </p>
+          <p>
+            <strong className="text-slate-200">配房模式落后:</strong> 依赖人工手动搜筛，效率低下。
           </p>
           <div className="pt-2 border-t border-white/5 mt-2">
-             <span className="text-slate-500">结论:</span> 坚定推进 ERP 对接与非标数据治理。
+             <span className="text-slate-500">警示:</span> 重构房源系统时需引以为戒。
           </div>
         </ResearchCard>
 

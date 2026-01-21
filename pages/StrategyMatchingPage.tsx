@@ -8,16 +8,16 @@ const StrategyMatchingPage: React.FC = () => {
           <i className="fas fa-handshake-simple text-2xl"></i>
         </div>
         <div>
-          <h2 className="text-3xl font-bold text-white">智能撮合：基于 ROI 与成功率的小B评价体系</h2>
+          <h2 className="text-3xl font-bold text-white">基于 ROI 与成功率的小B管理体系</h2>
           <p className="text-base text-slate-400">告别“平均主义”，实现“收益最大化”的动态分发</p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1 min-h-0">
-        {/* Left Column: Evaluation Model */}
+        {/* Left Column: Evaluation & Management */}
         <div className="lg:col-span-1 glass-card p-6 rounded-2xl border-t-4 border-emerald-500 flex flex-col hover:bg-slate-800/60 transition-colors">
            <h3 className="text-xl font-bold text-white mb-6 flex items-center">
-              <i className="fas fa-chart-pie mr-3 text-emerald-400"></i> 动态评价模型
+              <i className="fas fa-chart-pie mr-3 text-emerald-400"></i> 动态评价与管理
            </h3>
            
            <div className="flex-1 space-y-6">
@@ -43,6 +43,14 @@ const StrategyMatchingPage: React.FC = () => {
                     </div>
                     <div className="text-[10px] text-slate-500">重点考核：ROI、复购率</div>
                  </div>
+              </div>
+
+              {/* Agent Management */}
+              <div className="p-4 bg-red-500/10 rounded-xl border border-red-500/20">
+                 <div className="text-xs font-bold text-red-400 uppercase mb-2">管理机制探讨</div>
+                 <p className="text-xs text-slate-300 leading-relaxed mb-2">
+                    建立强制卡点：未标记客户问题 <span className="text-red-400">禁止回复</span> / <span className="text-red-400">暂停新线索分配</span>，倒逼经纪人完善数据。
+                 </p>
               </div>
            </div>
         </div>
@@ -73,8 +81,15 @@ const StrategyMatchingPage: React.FC = () => {
                  </div>
               </div>
               
-              <div className="text-xs text-slate-400 text-center leading-relaxed px-4">
-                 平衡“饥饿型”经纪人（急需线索，高潜力）与“饱和型”经纪人（边际效应递减），降低断续风险。
+              <div className="space-y-2 px-4">
+                 <div className="p-2 bg-slate-800 rounded border border-white/5 flex justify-between items-center">
+                    <span className="text-[10px] text-slate-400">业务匹配度</span>
+                    <div className="w-16 h-1 bg-slate-700 rounded-full overflow-hidden"><div className="w-[80%] h-full bg-blue-500"></div></div>
+                 </div>
+                 <div className="p-2 bg-slate-800 rounded border border-white/5 flex justify-between items-center">
+                    <span className="text-[10px] text-slate-400">沟通风格匹配</span>
+                    <div className="w-16 h-1 bg-slate-700 rounded-full overflow-hidden"><div className="w-[60%] h-full bg-purple-500"></div></div>
+                 </div>
               </div>
            </div>
         </div>
@@ -87,9 +102,14 @@ const StrategyMatchingPage: React.FC = () => {
            
            <div className="flex-1 space-y-4">
               <div className="p-4 bg-slate-800/50 rounded-xl border border-white/5">
-                 <div className="text-xs font-bold text-indigo-400 uppercase mb-2">Smart Opening</div>
-                 <div className="p-3 bg-indigo-500/10 rounded border border-indigo-500/20 text-xs text-slate-300 italic">
-                    "王经理，这位用户刚浏览了[XX小区]的三房，关注学区政策，建议从‘最新入学政策’切入..."
+                 <div className="text-xs font-bold text-indigo-400 uppercase mb-2">Smart Reply Integration</div>
+                 <p className="text-xs text-slate-400 mb-3">复用 IM 智能回复能力，为经纪人提供“开场白”与“高频问题”的<span className="text-white font-bold">一键发送</span>支持。</p>
+                 <div className="p-3 bg-indigo-500/10 rounded border border-indigo-500/20 text-xs text-slate-300">
+                    <div className="font-bold mb-1 text-white">推荐话术 (Recommendation)</div>
+                    <p className="mb-2 italic">"您关注的[XX小区]近期成交了一套同户型，价格..."</p>
+                    <button className="w-full py-1 bg-indigo-500 hover:bg-indigo-600 rounded text-[10px] text-white transition-colors">
+                       一键发送 (One-click Send)
+                    </button>
                  </div>
               </div>
 

@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { getAssetPath } from '../utils';
 
 const ProjectListingGenPage: React.FC = () => {
   const [showVideoModal, setShowVideoModal] = useState(false);
@@ -49,50 +50,63 @@ const ProjectListingGenPage: React.FC = () => {
         </div>
 
         <div className="space-y-6 flex flex-col">
-           <div className="glass-card p-5 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 border border-white/10 flex-1 hover:bg-slate-800/60 transition-colors">
-              <h3 className="text-base font-bold text-slate-200 uppercase tracking-widest mb-6 flex items-center">
-                <i className="fas fa-medal mr-3 text-yellow-400"></i> 竞争优势与思考
-              </h3>
-              
-              <div className="space-y-6">
-                 <div className="flex items-start">
-                    <div className="w-8 h-8 rounded bg-blue-500/20 flex items-center justify-center text-blue-400 mt-1 mr-4 text-sm font-bold flex-shrink-0">1</div>
-                    <div>
-                       <div className="text-base font-bold text-white mb-1">预置提示词与多维数据</div>
-                       <p className="text-base text-slate-400 leading-relaxed">相比竞品，预置了更丰富的提示词模板，并自动聚合平台房源数据，内容角度更多样化。</p>
-                    </div>
-                 </div>
-                 <div className="flex items-start">
-                    <div className="w-8 h-8 rounded bg-blue-500/20 flex items-center justify-center text-blue-400 mt-1 mr-4 text-sm font-bold flex-shrink-0">2</div>
-                    <div>
-                       <div className="text-base font-bold text-white mb-1">设计思路透明化</div>
-                       <p className="text-base text-slate-400 leading-relaxed">展示内容生成的设计思路，强化用户对 AI 生成内容的认可度与信任感。</p>
-                    </div>
-                 </div>
-                 <div className="flex items-start">
-                    <div className="w-8 h-8 rounded bg-blue-500/20 flex items-center justify-center text-blue-400 mt-1 mr-4 text-sm font-bold flex-shrink-0">3</div>
-                    <div>
-                       <div className="text-base font-bold text-white mb-1">低门槛交互</div>
-                       <p className="text-base text-slate-400 leading-relaxed">结合已填信息“先生成，再微调”，无需用户反复输入，经纪人反馈极其便利。</p>
-                    </div>
-                 </div>
-              </div>
-           </div>
-           
-           <div className="p-5 rounded-xl border border-dashed border-white/20 bg-white/5">
-              <div className="text-sm text-slate-500 uppercase font-bold mb-2 tracking-wider">Future Iteration</div>
-              <p className="text-base text-slate-300 leading-relaxed">
-                后续将结合插件发房场景迭代 AIGC 功能，并尝试结合经纪人个人偏好（如话术风格）进行个性化生成。
-              </p>
-              
-              <button 
+           <div className="glass-card p-5 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 border border-white/10 flex-1 hover:bg-slate-800/60 transition-colors flex flex-col">
+             <h3 className="text-base font-bold text-slate-200 uppercase tracking-widest mb-6 flex items-center">
+               <i className="fas fa-layer-group mr-3 text-yellow-400"></i> 设计亮点 (Design Highlights)
+             </h3>
+             
+             <div className="space-y-5 flex-1">
+                <div className="flex items-start">
+                   <div className="w-6 h-6 rounded bg-blue-500/20 flex items-center justify-center text-blue-400 mt-0.5 mr-3 text-xs font-bold flex-shrink-0">1</div>
+                   <div>
+                      <div className="text-sm font-bold text-white mb-0.5">低门槛交互 & 思路外显</div>
+                      <p className="text-xs text-slate-400 leading-relaxed">“先生成，再微调”，并在界面展示内容生成的设计思路（Chain of Thought），增强用户信任感。</p>
+                   </div>
+                </div>
+                <div className="flex items-start">
+                   <div className="w-6 h-6 rounded bg-blue-500/20 flex items-center justify-center text-blue-400 mt-0.5 mr-3 text-xs font-bold flex-shrink-0">2</div>
+                   <div>
+                      <div className="text-sm font-bold text-white mb-0.5">上下文引入平台数据</div>
+                      <p className="text-xs text-slate-400 leading-relaxed">自动注入平台沉淀的<span className="text-blue-400">市场行情、成交数据</span>，让生成内容言之有物，拒绝空洞。</p>
+                   </div>
+                </div>
+                <div className="flex items-start">
+                   <div className="w-6 h-6 rounded bg-blue-500/20 flex items-center justify-center text-blue-400 mt-0.5 mr-3 text-xs font-bold flex-shrink-0">3</div>
+                   <div>
+                      <div className="text-sm font-bold text-white mb-0.5">高价值源联网搜索</div>
+                      <p className="text-xs text-slate-400 leading-relaxed">指定<span className="text-blue-400">贝壳、安居客</span>等高价值数据源进行联网检索，补全房源亮点信息。</p>
+                   </div>
+                </div>
+             </div>
+
+             <button 
                 onClick={() => setShowVideoModal(true)}
-                className="w-full mt-4 py-2.5 rounded-lg bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/30 text-blue-300 font-bold flex items-center justify-center transition-all group"
+                className="w-full mt-6 py-2.5 rounded-lg bg-yellow-500/10 hover:bg-yellow-500/20 border border-yellow-500/30 text-yellow-400 font-bold flex items-center justify-center transition-all group"
               >
                 <i className="fas fa-play-circle mr-2 group-hover:scale-110 transition-transform text-lg"></i>
                 观看功能演示 (Watch Demo)
               </button>
-           </div>
+          </div>
+          
+          <div className="p-5 rounded-xl border border-dashed border-white/20 bg-white/5">
+             <div className="text-sm text-slate-500 uppercase font-bold mb-2 tracking-wider">Future Planning</div>
+             <ul className="space-y-3">
+                <li className="flex items-start">
+                   <i className="fas fa-arrow-right text-slate-500 mt-1 mr-2 text-xs"></i>
+                   <div>
+                      <span className="text-sm text-slate-200 font-bold">多渠道内容适配:</span>
+                      <p className="text-xs text-slate-400 mt-0.5">一键生成适配微信社群、朋友圈、小红书等不同渠道风格的文案。</p>
+                   </div>
+                </li>
+                <li className="flex items-start">
+                   <i className="fas fa-arrow-right text-slate-500 mt-1 mr-2 text-xs"></i>
+                   <div>
+                      <span className="text-sm text-slate-200 font-bold">运营推荐与热点结合:</span>
+                      <p className="text-xs text-slate-400 mt-0.5">运营调用能力结合实时热点，快速生产热门房源合集分发私域。</p>
+                   </div>
+                </li>
+             </ul>
+          </div>
         </div>
       </div>
 
@@ -120,7 +134,7 @@ const ProjectListingGenPage: React.FC = () => {
                 controls 
                 autoPlay 
                 className="w-full h-full object-contain"
-                src="/videos/listing_gen_demo.mp4"
+                src={getAssetPath('/videos/listing_gen_demo.mp4')}
               >
                 Your browser does not support the video tag.
               </video>

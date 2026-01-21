@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { getAssetPath } from '../utils';
 
 const STARItem = ({ label, content, icon, color, action }: any) => (
   <div className={`p-5 rounded-xl border border-white/5 bg-slate-900/40 relative overflow-hidden group hover:bg-slate-800/60 transition-colors`}>
@@ -171,7 +172,7 @@ const ProjectIMPage: React.FC = () => {
                       
                       <div className="aspect-[4/3] bg-slate-800 rounded-lg flex items-center justify-center border border-white/5 overflow-hidden relative group mb-4">
                         <img 
-                          src="/images/im_card_new_house.png" 
+                          src={getAssetPath('/images/im_card_new_house.png')} 
                           alt="新房卡片" 
                           className="w-full h-full object-cover z-10 relative"
                           onError={(e) => e.currentTarget.style.display = 'none'}
@@ -202,7 +203,7 @@ const ProjectIMPage: React.FC = () => {
                       
                       <div className="aspect-[4/3] bg-slate-800 rounded-lg flex items-center justify-center border border-white/5 overflow-hidden relative group mb-4">
                         <img 
-                          src="/images/im_card_community.png" 
+                          src={getAssetPath('/images/im_card_community.png')} 
                           alt="小区卡片" 
                           className="w-full h-full object-cover z-10 relative"
                           onError={(e) => e.currentTarget.style.display = 'none'}
@@ -232,7 +233,7 @@ const ProjectIMPage: React.FC = () => {
                       
                       <div className="aspect-[4/3] bg-slate-800 rounded-lg flex items-center justify-center border border-white/5 overflow-hidden relative group mb-4">
                         <img 
-                          src="/images/im_card_listing.png" 
+                          src={getAssetPath('/images/im_card_listing.png')} 
                           alt="房源卡片" 
                           className="w-full h-full object-cover z-10 relative"
                           onError={(e) => e.currentTarget.style.display = 'none'}

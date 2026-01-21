@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { getAssetPath } from '../utils';
 
 const ProjectAgentSkillsPage: React.FC = () => {
   const [showWorkflowModal, setShowWorkflowModal] = useState(false);
@@ -131,7 +132,7 @@ const ProjectAgentSkillsPage: React.FC = () => {
             
             <div className="w-full h-full bg-slate-800/50 rounded-2xl flex items-center justify-center border border-white/10 overflow-hidden relative group">
               <img 
-                src="/images/agent_skills_workflow_demo.png" 
+                src={getAssetPath('/images/agent_skills_workflow_demo.png')} 
                 alt="Workflow Demo" 
                 className="w-full h-full object-contain z-10 relative hidden"
                 onLoad={(e) => e.currentTarget.classList.remove('hidden')}
