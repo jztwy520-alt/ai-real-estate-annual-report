@@ -2,22 +2,21 @@
 import React from 'react';
 
 const HighlightItem = ({ icon, title, tags, description, color }: any) => (
-  <div className={`p-6 rounded-2xl border border-white/5 bg-slate-900/40 relative overflow-hidden group hover:bg-slate-800/60 transition-colors h-full flex flex-col`}>
-    <div className={`absolute top-0 left-0 w-full h-1.5 bg-${color}-500`}></div>
+  <div className={`clay-card p-6 relative overflow-hidden group hover:bg-${color}-50 transition-colors h-full flex flex-col`}>
     <div className="flex items-center justify-between mb-5">
-      <div className={`w-14 h-14 rounded-full bg-${color}-500/20 flex items-center justify-center text-${color}-400 group-hover:scale-110 transition-transform`}>
+      <div className={`w-14 h-14 rounded-2xl bg-${color}-100 flex items-center justify-center text-${color}-500 shadow-inner group-hover:scale-110 transition-transform`}>
         <i className={`fas ${icon} text-2xl`}></i>
       </div>
     </div>
-    <h3 className="text-xl font-bold text-white mb-4">{title}</h3>
+    <h3 className="text-xl font-bold text-slate-800 mb-4">{title}</h3>
     <div className="flex flex-wrap gap-3 mb-5">
       {tags.map((tag: string, i: number) => (
-        <span key={i} className={`px-2.5 py-1 rounded-md bg-${color}-500/10 border border-${color}-500/20 text-xs font-bold text-${color}-400 uppercase shadow-[0_0_10px_rgba(0,0,0,0.2)]`}>
+        <span key={i} className={`px-3 py-1.5 rounded-xl bg-white shadow-sm border border-${color}-100 text-xs font-bold text-${color}-600`}>
           {tag}
         </span>
       ))}
     </div>
-    <p className="text-sm text-slate-300 leading-relaxed mt-auto font-medium">{description}</p>
+    <p className="text-sm text-slate-500 leading-relaxed mt-auto font-medium">{description}</p>
   </div>
 );
 
@@ -25,12 +24,12 @@ const HighlightsPage: React.FC = () => {
   return (
     <div className="space-y-8 h-full flex flex-col">
       <div className="flex items-center space-x-4 flex-shrink-0">
-        <div className="w-14 h-14 rounded-full bg-yellow-500/20 flex items-center justify-center text-yellow-400">
+        <div className="w-14 h-14 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-500 shadow-inner">
           <i className="fas fa-star text-2xl"></i>
         </div>
         <div>
-          <h2 className="text-3xl font-bold text-white">年度 AI 核心亮点</h2>
-          <p className="text-base text-slate-400">Key Achievements</p>
+          <h2 className="text-3xl font-black text-indigo-900 drop-shadow-sm">年度 AI 核心亮点</h2>
+          <p className="text-base text-slate-500 font-bold">Key Achievements</p>
         </div>
       </div>
 

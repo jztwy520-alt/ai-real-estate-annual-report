@@ -89,94 +89,85 @@ const App: React.FC = () => {
   }, [currentPage]);
 
   return (
-    <div className="relative w-full h-screen bg-slate-950 overflow-hidden flex flex-col font-sans select-none">
-      {/* Dynamic Background */}
-      <div className="absolute inset-0 bg-grid z-0 opacity-40"></div>
-      <div className="scanline"></div>
-      
-      {/* Ambient Glows */}
-      <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] bg-purple-900/10 blur-[150px] rounded-full animate-pulse"></div>
-      <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-cyan-900/10 blur-[150px] rounded-full animate-pulse [animation-delay:2s]"></div>
-      
-      {/* Header Navigation */}
-      <header className="relative z-30 flex justify-between items-center px-10 py-4 backdrop-blur-md border-b border-white/10 transition-all duration-500">
+    <div className="relative w-full h-screen overflow-hidden flex flex-col font-sans select-none text-slate-800 bg-slate-50/50">
+      {/* Soft Ambient Background Elements */}
+      <div className="absolute top-[-10%] left-[-5%] w-[50%] h-[50%] bg-purple-200/40 blur-[120px] rounded-full mix-blend-multiply animate-blob"></div>
+      <div className="absolute top-[-10%] right-[-5%] w-[50%] h-[50%] bg-blue-200/40 blur-[120px] rounded-full mix-blend-multiply animate-blob animation-delay-2000"></div>
+      <div className="absolute bottom-[-20%] left-[20%] w-[50%] h-[50%] bg-pink-200/40 blur-[120px] rounded-full mix-blend-multiply animate-blob animation-delay-4000"></div>
+
+      {/* Header Navigation - Clay Style */}
+      <header className="relative z-50 flex justify-between items-center px-8 py-3">
         <div className="flex items-center space-x-4">
-          <div className="relative">
-            <div className="absolute inset-0 bg-cyan-400 blur-lg opacity-20 animate-pulse"></div>
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-cyan-600 flex items-center justify-center shadow-2xl border border-white/20">
-              <i className="fas fa-cube text-white text-xl"></i>
-            </div>
+          <div className="w-10 h-10 rounded-2xl bg-indigo-500 shadow-lg shadow-indigo-500/30 flex items-center justify-center text-white transform hover:rotate-12 transition-transform duration-300">
+            <i className="fas fa-cube text-lg"></i>
           </div>
           <div>
-            <h1 className="text-xl font-black tracking-tighter text-white uppercase italic">
-              PropTech <span className="text-cyan-400 glow-text">INTELLIGENCE</span>
-            </h1>
-            <p className="text-[8px] text-slate-500 font-bold uppercase tracking-[0.4em]">2024 Annual Strategic Report</p>
+            <div className="text-xl font-black text-slate-800 tracking-tight leading-none">AI Real Estate</div>
+            <div className="text-[10px] font-bold text-indigo-500 uppercase tracking-widest mt-0.5">2025 Annual Report</div>
           </div>
         </div>
         
-        <div className="hidden lg:flex items-center space-x-1 glass-card p-1 rounded-full border border-white/5">
+        {/* Page Indicators */}
+        <div className="hidden lg:flex items-center gap-1 p-2 rounded-full bg-white/50 backdrop-blur-sm border border-white/60 shadow-sm">
           {Array.from({ length: totalPages }).map((_, i) => (
             <button
               key={i}
               onClick={() => setCurrentPage(i)}
               title={`Page ${i + 1}`}
-              className={`w-8 h-1 transition-all duration-500 rounded-full ${
-                currentPage === i ? 'bg-cyan-400 w-12 shadow-[0_0_15px_#22d3ee]' : 'bg-slate-800 hover:bg-slate-700'
+              className={`h-2 rounded-full transition-all duration-300 ${
+                currentPage === i ? 'bg-indigo-500 w-8' : 'bg-slate-300 w-2 hover:bg-indigo-300'
               }`}
             />
           ))}
         </div>
 
-        <div className="flex items-center space-x-6">
-           <div className="hidden md:flex flex-col items-end mr-4">
-             <span className="text-[8px] text-slate-500 uppercase font-black">System Status</span>
-             <span className="text-[10px] text-cyan-400 font-mono flex items-center">
-               <span className="w-1 h-1 rounded-full bg-cyan-400 mr-2 animate-ping"></span>
-               OPERATIONAL
-             </span>
-           </div>
-           <div className="flex items-center space-x-2 glass-card rounded-lg p-1">
-             <button onClick={handlePrev} className="p-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-md transition-all">
-               <i className="fas fa-arrow-left text-sm"></i>
-             </button>
-             <div className="px-3 text-lg font-black font-mono text-white min-w-[60px] text-center">
-               {String(currentPage + 1).padStart(2, '0')} <span className="text-slate-600 mx-1">/</span> {String(totalPages).padStart(2, '0')}
+        <div className="flex items-center gap-4">
+
+             
+             {/* Navigation Buttons */}
+             <div className="flex items-center gap-2">
+               <button onClick={handlePrev} className="w-10 h-10 rounded-xl bg-white shadow-sm border border-slate-100 flex items-center justify-center text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-colors">
+                 <i className="fas fa-chevron-left"></i>
+               </button>
+               <div className="px-4 font-black font-mono text-slate-400 text-lg">
+                 <span className="text-indigo-600">{String(currentPage + 1).padStart(2, '0')}</span>
+                 <span className="mx-1 text-slate-300">/</span>
+                 {String(totalPages).padStart(2, '0')}
+               </div>
+               <button onClick={handleNext} className="w-10 h-10 rounded-xl bg-white shadow-sm border border-slate-100 flex items-center justify-center text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-colors">
+                 <i className="fas fa-chevron-right"></i>
+               </button>
              </div>
-             <button onClick={handleNext} className="p-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-md transition-all">
-               <i className="fas fa-arrow-right text-sm"></i>
-             </button>
-           </div>
         </div>
       </header>
 
       {/* Main Content Area */}
       <main 
         ref={containerRef}
-        className="relative flex-1 z-10 flex flex-col items-center py-8 px-6 md:px-20 overflow-y-auto overflow-x-hidden custom-scrollbar"
+        className="relative flex-1 z-10 flex flex-col items-center py-4 px-6 md:px-12 overflow-y-auto overflow-x-hidden custom-scrollbar"
       >
-        <div className="w-full max-w-7xl animate-in fade-in slide-in-from-bottom-8 duration-700 ease-out my-auto">
+        <div className="w-full max-w-7xl animate-in fade-in slide-in-from-bottom-8 duration-700 ease-out my-auto pb-8">
           {pages[currentPage]}
         </div>
       </main>
 
-      {/* Footer AI HUD */}
-      <footer className="relative z-30 px-10 py-4 glass-card border-t border-white/10 flex flex-col md:flex-row items-center justify-between transition-all duration-500">
+      {/* Footer AI HUD - Clay Style */}
+      <footer className="relative z-30 px-8 py-4 bg-white/60 backdrop-blur-md border-t border-white/50 flex flex-col md:flex-row items-center justify-between">
         <div className="flex items-center space-x-6 w-full md:w-auto">
           <div className="flex flex-col">
             <div className="flex items-center space-x-2 mb-1">
-               <i className="fas fa-microchip text-cyan-400 text-[10px]"></i>
-               <span className="text-[8px] text-slate-500 uppercase font-black tracking-widest">AI Strategic Insight Engine</span>
+               <div className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></div>
+               <span className="text-[10px] text-indigo-600 uppercase font-black tracking-widest">AI Strategic Insight Engine</span>
             </div>
-            <div className="h-8 flex items-center min-w-[300px]">
+            <div className="h-6 flex items-center min-w-[300px]">
               {loadingInsight ? (
-                <div className="flex space-x-2">
-                  <div className="w-1 h-3 bg-cyan-500/50 rounded-sm animate-[bounce_1s_infinite]"></div>
-                  <div className="w-1 h-3 bg-cyan-500/50 rounded-sm animate-[bounce_1s_infinite_0.1s]"></div>
-                  <div className="w-1 h-3 bg-cyan-500/50 rounded-sm animate-[bounce_1s_infinite_0.2s]"></div>
+                <div className="flex space-x-1">
+                  <div className="w-1 h-1 bg-indigo-400 rounded-full animate-bounce"></div>
+                  <div className="w-1 h-1 bg-indigo-400 rounded-full animate-bounce delay-75"></div>
+                  <div className="w-1 h-1 bg-indigo-400 rounded-full animate-bounce delay-150"></div>
                 </div>
               ) : (
-                <p className="text-xs text-slate-200 font-medium tracking-wide italic border-l-2 border-cyan-500 pl-4 py-1">
+                <p className="text-sm text-slate-700 font-bold tracking-wide italic border-l-2 border-indigo-500 pl-3">
                   {aiInsight}
                 </p>
               )}
@@ -184,12 +175,12 @@ const App: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex flex-col items-end mt-4 md:mt-0">
-          <div className="text-[8px] text-slate-500 uppercase tracking-[0.3em] font-bold mb-1">Platform Architecture v2.4.0</div>
+        <div className="flex flex-col items-end mt-4 md:mt-0 opacity-60 hover:opacity-100 transition-opacity">
+          <div className="text-[9px] text-slate-400 uppercase tracking-[0.3em] font-bold mb-1">Platform Architecture v2.4.0</div>
           <div className="flex space-x-4">
-             <div className="text-[8px] text-slate-400"><i className="fas fa-shield-halved mr-1 text-purple-400"></i> SECURE</div>
-             <div className="text-[8px] text-slate-400"><i className="fas fa-bolt mr-1 text-orange-400"></i> OPTIMIZED</div>
-             <div className="text-[8px] text-slate-400"><i className="fas fa-network-wired mr-1 text-cyan-400"></i> CONNECTED</div>
+             <div className="text-[9px] text-slate-500 font-semibold"><i className="fas fa-shield-alt mr-1 text-green-500"></i> SECURE</div>
+             <div className="text-[9px] text-slate-500 font-semibold"><i className="fas fa-bolt mr-1 text-yellow-500"></i> FAST</div>
+             <div className="text-[9px] text-slate-500 font-semibold"><i className="fas fa-circle-nodes mr-1 text-blue-500"></i> CONNECTED</div>
           </div>
         </div>
       </footer>

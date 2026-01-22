@@ -7,94 +7,99 @@ const ProjectCommunityGenPage: React.FC = () => {
   return (
     <div className="space-y-8 h-full flex flex-col">
       <div className="flex items-center space-x-4 flex-shrink-0">
-        <div className="w-14 h-14 rounded-full bg-cyan-500/20 flex items-center justify-center text-cyan-400">
+        <div className="w-14 h-14 rounded-full bg-cyan-100 flex items-center justify-center text-cyan-500 shadow-inner">
           <i className="fas fa-city text-2xl"></i>
         </div>
         <div>
-          <h2 className="text-3xl font-bold text-white">AI 应用场景 II：小区测评规模化生产</h2>
-          <p className="text-base text-slate-400">全流程自动化，0人工成本，流量收割机</p>
+          <h2 className="text-3xl font-black text-indigo-900 drop-shadow-sm">AI 应用场景 II：小区测评规模化生产</h2>
+          <p className="text-base text-slate-500 font-bold">全流程自动化，0人工成本，流量收割机</p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 flex-1 min-h-0">
-        <div className="glass-card p-5 rounded-2xl border-t-4 border-cyan-500 flex flex-col h-full hover:bg-slate-800/60 transition-colors">
+        <div className="clay-card p-5 flex flex-col h-full hover:bg-slate-50 transition-colors">
            <div className="flex justify-between items-start mb-6">
-              <h3 className="text-xl font-bold text-white">自动化生产闭环</h3>
-              <div className="px-3 py-1.5 rounded bg-cyan-500/10 text-cyan-400 text-sm font-bold border border-cyan-500/20">自动化率 100%</div>
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-cyan-100 rounded-lg text-cyan-600 shadow-sm">
+                  <i className="fas fa-sync-alt"></i>
+                </div>
+                <h3 className="text-xl font-display font-bold text-slate-800">自动化生产闭环</h3>
+              </div>
+              <div className="px-3 py-1.5 rounded-lg bg-cyan-100 text-cyan-600 text-sm font-bold shadow-sm">自动化率 100%</div>
            </div>
            
            <div className="flex flex-col gap-6 flex-1">
              {/* Industrial Transformation Process */}
-             <div className="p-5 rounded-xl bg-slate-800/50 border border-white/5 flex-1 flex flex-col">
+             <div className="p-5 rounded-xl bg-slate-50 border border-slate-200 flex-1 flex flex-col shadow-inner">
                 <div className="flex items-center mb-4">
-                   <i className="fas fa-bolt text-yellow-400 mr-3 text-lg"></i>
-                   <span className="text-lg font-bold text-white">工业化转型流程</span>
+                   <i className="fas fa-bolt text-yellow-500 mr-3 text-lg"></i>
+                   <span className="text-lg font-bold text-slate-700">工业化转型流程</span>
                 </div>
                 
                 {/* Process Visual */}
                 <div className="flex items-center justify-between my-6 px-2">
                    <div className="flex flex-col items-center gap-2">
-                      <div className="w-10 h-10 rounded-lg bg-slate-700 flex items-center justify-center border border-white/10">
-                        <i className="fas fa-database text-blue-400"></i>
+                      <div className="w-10 h-10 rounded-lg bg-white flex items-center justify-center border border-slate-200 shadow-sm">
+                        <i className="fas fa-database text-blue-500"></i>
                       </div>
-                      <span className="text-xs text-slate-400 font-bold uppercase">数据聚合</span>
+                      <span className="text-xs text-slate-500 font-bold uppercase">数据聚合</span>
                    </div>
-                   <i className="fas fa-chevron-right text-slate-600 text-xs"></i>
+                   <i className="fas fa-chevron-right text-slate-400 text-xs"></i>
                    <div className="flex flex-col items-center gap-2">
-                      <div className="w-10 h-10 rounded-lg bg-cyan-900/30 flex items-center justify-center border border-cyan-500/30">
-                        <i className="fas fa-robot text-cyan-400"></i>
+                      <div className="w-10 h-10 rounded-lg bg-cyan-50 flex items-center justify-center border border-cyan-200 shadow-sm">
+                        <i className="fas fa-robot text-cyan-500"></i>
                       </div>
-                      <span className="text-xs text-cyan-400 font-bold uppercase">AI 生成</span>
+                      <span className="text-xs text-cyan-600 font-bold uppercase">AI 生成</span>
                    </div>
-                   <i className="fas fa-chevron-right text-slate-600 text-xs"></i>
+                   <i className="fas fa-chevron-right text-slate-400 text-xs"></i>
                    <div className="flex flex-col items-center gap-2">
-                      <div className="w-10 h-10 rounded-lg bg-slate-700 flex items-center justify-center border border-white/10">
-                        <i className="fas fa-check-circle text-emerald-400"></i>
+                      <div className="w-10 h-10 rounded-lg bg-white flex items-center justify-center border border-slate-200 shadow-sm">
+                        <i className="fas fa-check-circle text-emerald-500"></i>
                       </div>
-                      <span className="text-xs text-slate-400 font-bold uppercase">质量校验</span>
+                      <span className="text-xs text-slate-500 font-bold uppercase">质量校验</span>
                    </div>
-                   <i className="fas fa-chevron-right text-slate-600 text-xs"></i>
+                   <i className="fas fa-chevron-right text-slate-400 text-xs"></i>
                    <div className="flex flex-col items-center gap-2">
-                      <div className="w-10 h-10 rounded-lg bg-slate-700 flex items-center justify-center border border-white/10">
-                        <i className="fas fa-globe text-purple-400"></i>
+                      <div className="w-10 h-10 rounded-lg bg-white flex items-center justify-center border border-slate-200 shadow-sm">
+                        <i className="fas fa-globe text-purple-500"></i>
                       </div>
-                      <span className="text-xs text-slate-400 font-bold uppercase">上线更新</span>
+                      <span className="text-xs text-slate-500 font-bold uppercase">上线更新</span>
                    </div>
                 </div>
 
-                <p className="text-base text-slate-300 leading-relaxed mt-auto">
-                  从人工编辑彻底转向自动化。无需运营配置，目前已实现 <span className="text-cyan-400 font-bold">11,000+</span> 小区全站覆盖，数据实时性与准确性大幅提升。
+                <p className="text-base text-slate-600 leading-relaxed mt-auto font-medium">
+                  从人工编辑彻底转向自动化。无需运营配置，目前已实现 <span className="text-cyan-600 font-black">11,000+</span> 小区全站覆盖，数据实时性与准确性大幅提升。
                 </p>
              </div>
 
              {/* Business Impact Stats */}
              <div className="grid grid-cols-2 gap-4">
-                <div className="p-5 rounded-xl bg-gradient-to-br from-green-500/10 to-emerald-500/5 border border-green-500/20 hover:border-green-500/40 transition-colors">
+                <div className="p-5 rounded-xl bg-gradient-to-br from-green-50 to-emerald-50 border border-green-100 hover:border-green-200 transition-colors shadow-sm">
                    <div className="flex items-center gap-2 mb-2">
-                      <i className="fas fa-chart-line text-green-400 text-sm"></i>
-                      <span className="text-xs text-green-400 uppercase font-bold tracking-wider">咨询转化率</span>
+                      <i className="fas fa-chart-line text-green-500 text-sm"></i>
+                      <span className="text-xs text-green-600 uppercase font-bold tracking-wider">咨询转化率</span>
                    </div>
                    <div className="flex items-baseline gap-1">
-                      <span className="text-3xl font-black text-white">8-12</span>
-                      <span className="text-sm font-bold text-green-400">%</span>
+                      <span className="text-3xl font-black text-slate-800">8-12</span>
+                      <span className="text-sm font-bold text-green-600">%</span>
                    </div>
-                   <div className="mt-2 text-xs text-slate-400 font-medium">
-                      <span className="text-slate-500 line-through mr-1">5%</span> 
-                      <span className="text-green-400 bg-green-500/10 px-1.5 py-0.5 rounded">↑ 提升显著</span>
+                   <div className="mt-2 text-xs text-slate-500 font-medium">
+                      <span className="text-slate-400 line-through mr-1">5%</span> 
+                      <span className="text-green-600 bg-green-100 px-1.5 py-0.5 rounded">↑ 提升显著</span>
                    </div>
                 </div>
 
-                <div className="p-5 rounded-xl bg-gradient-to-br from-cyan-500/10 to-blue-500/5 border border-cyan-500/20 hover:border-cyan-500/40 transition-colors">
+                <div className="p-5 rounded-xl bg-gradient-to-br from-cyan-50 to-blue-50 border border-cyan-100 hover:border-cyan-200 transition-colors shadow-sm">
                    <div className="flex items-center gap-2 mb-2">
-                      <i className="fas fa-coins text-cyan-400 text-sm"></i>
-                      <span className="text-xs text-cyan-400 uppercase font-bold tracking-wider">单篇成本</span>
+                      <i className="fas fa-coins text-cyan-500 text-sm"></i>
+                      <span className="text-xs text-cyan-600 uppercase font-bold tracking-wider">单篇成本</span>
                    </div>
                    <div className="flex items-baseline gap-1">
-                      <span className="text-3xl font-black text-white">0.2</span>
-                      <span className="text-sm font-bold text-cyan-400">元</span>
+                      <span className="text-3xl font-black text-slate-800">0.2</span>
+                      <span className="text-sm font-bold text-cyan-600">元</span>
                    </div>
-                   <div className="mt-2 text-xs text-slate-400 font-medium">
-                      <span className="text-cyan-400 bg-cyan-500/10 px-1.5 py-0.5 rounded">↓ 极致压缩</span>
+                   <div className="mt-2 text-xs text-slate-500 font-medium">
+                      <span className="text-cyan-600 bg-cyan-100 px-1.5 py-0.5 rounded">↓ 极致压缩</span>
                    </div>
                 </div>
              </div>
@@ -102,40 +107,40 @@ const ProjectCommunityGenPage: React.FC = () => {
         </div>
 
         <div className="space-y-6 flex flex-col">
-           <div className="glass-card p-5 rounded-2xl bg-slate-900/80 border border-white/10 flex-1 hover:bg-slate-800/60 transition-colors flex flex-col">
-             <h3 className="text-base font-bold text-slate-500 uppercase tracking-widest mb-6 flex items-center">
-               <i className="fas fa-lightbulb mr-3 text-cyan-400"></i> 当前应用与未来规划
+           <div className="clay-card p-5 bg-white border border-slate-100 flex-1 hover:bg-slate-50 transition-colors flex flex-col">
+             <h3 className="text-base font-black text-slate-400 uppercase tracking-widest mb-6 flex items-center">
+               <i className="fas fa-lightbulb mr-3 text-cyan-500"></i> 当前应用与未来规划
              </h3>
              
              <div className="space-y-6 flex-1">
                 <div className="flex items-start">
-                   <i className="fas fa-check-circle text-green-400 mt-1 mr-3 text-sm"></i>
+                   <i className="fas fa-check-circle text-green-500 mt-1 mr-3 text-sm"></i>
                    <div>
-                      <div className="text-base font-bold text-white mb-1">已快速应用到分站</div>
-                      <p className="text-sm text-slate-400 leading-relaxed">
-                         基于<span className="text-cyan-400">“查成交”</span>功能抓取贝壳小区数据，结合地图 SDK 配套数据与联网数据（贝壳等优质源）自动生产。
-                         <br/><span className="text-xs text-slate-500 mt-1 block">运营仅需审核内容质量，生产环节 0 介入。</span>
+                      <div className="text-base font-bold text-slate-800 mb-1">已快速应用到分站</div>
+                      <p className="text-sm text-slate-500 leading-relaxed font-medium">
+                         基于<span className="text-cyan-600 font-bold">“查成交”</span>功能抓取贝壳小区数据，结合地图 SDK 配套数据与联网数据（贝壳等优质源）自动生产。
+                         <br/><span className="text-xs text-slate-400 mt-1 block">运营仅需审核内容质量，生产环节 0 介入。</span>
                       </p>
                    </div>
                 </div>
                 
                 <div className="flex items-start">
-                   <i className="fas fa-layer-group text-cyan-400 mt-1 mr-3 text-sm"></i>
+                   <i className="fas fa-layer-group text-cyan-500 mt-1 mr-3 text-sm"></i>
                    <div>
-                      <div className="text-base font-bold text-white mb-1">AIGC 上下文基石</div>
-                      <p className="text-sm text-slate-400 leading-relaxed">
-                         生成的结构化测评数据，反向作为其他 AIGC 应用（如智能对话、推荐系统）的 <span className="text-cyan-400 font-bold">核心 Context 数据</span>。
+                      <div className="text-base font-bold text-slate-800 mb-1">AIGC 上下文基石</div>
+                      <p className="text-sm text-slate-500 leading-relaxed font-medium">
+                         生成的结构化测评数据，反向作为其他 AIGC 应用（如智能对话、推荐系统）的 <span className="text-cyan-600 font-bold">核心 Context 数据</span>。
                       </p>
                    </div>
                 </div>
 
-                <div className="p-4 rounded-xl border border-dashed border-white/20 bg-white/5 mt-auto">
-                   <div className="text-xs text-slate-500 uppercase font-bold mb-2 tracking-wider">Future Planning</div>
+                <div className="p-4 rounded-xl border border-dashed border-slate-300 bg-slate-50 mt-auto">
+                   <div className="text-xs text-slate-400 uppercase font-bold mb-2 tracking-wider">Future Planning</div>
                    <div className="flex items-start">
-                      <i className="fas fa-star text-yellow-400 mt-1 mr-2 text-xs"></i>
+                      <i className="fas fa-star text-yellow-500 mt-1 mr-2 text-xs"></i>
                       <div>
-                         <div className="text-sm font-bold text-slate-200">全场景内容自动化</div>
-                         <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                         <div className="text-sm font-bold text-slate-700">全场景内容自动化</div>
+                         <p className="text-xs text-slate-500 mt-1 leading-relaxed font-medium">
                             延伸至淘房圈动态、公众号文章等场景，自动生成小区分析与房源描述，实现内容矩阵的自动化填充。
                          </p>
                       </div>
@@ -144,30 +149,30 @@ const ProjectCommunityGenPage: React.FC = () => {
              </div>
           </div>
 
-           <div className="p-5 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-xl border border-cyan-500/30 flex items-center justify-between">
+           <div className="p-5 bg-gradient-to-r from-cyan-100 to-blue-100 rounded-xl border border-cyan-200 flex items-center justify-between shadow-sm">
               <div>
-                 <div className="text-sm text-cyan-300 font-bold mb-1 uppercase tracking-wider">Total Coverage</div>
-                 <div className="text-3xl font-black text-white">11,000+</div>
+                 <div className="text-sm text-cyan-700 font-bold mb-1 uppercase tracking-wider">Total Coverage</div>
+                 <div className="text-3xl font-black text-cyan-900">11,000+</div>
               </div>
               <div className="text-right">
-                 <div className="text-sm text-blue-300 font-bold mb-1 uppercase tracking-wider">Cost Saving</div>
-                 <div className="text-3xl font-black text-white">100%</div>
+                 <div className="text-sm text-blue-700 font-bold mb-1 uppercase tracking-wider">Cost Saving</div>
+                 <div className="text-3xl font-black text-blue-900">100%</div>
               </div>
            </div>
         </div>
       </div>
-      {/* Analysis Modal */}
+      {/* Analysis Modal - Clay Style */}
       {showAnalysisModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-sm p-4 animate-in fade-in duration-200" onClick={() => setShowAnalysisModal(false)}>
-          <div className="relative w-full max-w-4xl h-[85vh] bg-slate-900 rounded-2xl overflow-hidden border border-white/10 shadow-2xl flex flex-col" onClick={e => e.stopPropagation()}>
-            <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-slate-800">
-               <h3 className="text-white font-bold text-lg flex items-center">
-                 <i className="fas fa-chart-pie text-cyan-400 mr-2"></i>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-in fade-in duration-200" onClick={() => setShowAnalysisModal(false)}>
+          <div className="relative w-full max-w-4xl h-[85vh] bg-[#F3F6FD] rounded-3xl overflow-hidden border border-white shadow-2xl flex flex-col" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 bg-white">
+               <h3 className="text-slate-800 font-black text-lg flex items-center">
+                 <i className="fas fa-chart-pie text-cyan-500 mr-2"></i>
                  用户咨询关注点分析 (Top User Interests)
                </h3>
                <button 
                   onClick={() => setShowAnalysisModal(false)}
-                  className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors"
+                  className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-600 transition-colors shadow-sm"
                >
                   <i className="fas fa-times"></i>
                </button>
@@ -177,7 +182,7 @@ const ProjectCommunityGenPage: React.FC = () => {
             <div className="absolute top-4 right-16">
               <button 
                 onClick={() => setShowAnalysisModal(false)}
-                className="px-3 py-1.5 rounded-full bg-slate-800 border border-white/10 text-xs text-slate-300 hover:bg-slate-700 hover:text-white transition-colors flex items-center"
+                className="px-3 py-1.5 rounded-full bg-white border border-slate-200 text-xs text-slate-500 hover:bg-slate-50 hover:text-slate-700 transition-colors flex items-center shadow-sm font-bold"
               >
                 <i className="fas fa-arrow-left mr-2"></i> 返回 (Back)
               </button>
@@ -186,15 +191,15 @@ const ProjectCommunityGenPage: React.FC = () => {
             <div className="flex-1 overflow-y-auto p-6 custom-scrollbar">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                  {/* Summary Stats */}
-                 <div className="p-4 rounded-xl bg-slate-800/50 border border-white/5">
+                 <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-sm">
                     <div className="text-xs text-slate-400 uppercase font-bold mb-2">Total Interactions</div>
-                    <div className="text-3xl font-black text-white">450+</div>
-                    <div className="text-xs text-slate-500 mt-1">样本覆盖主流咨询场景</div>
+                    <div className="text-3xl font-black text-slate-800">450+</div>
+                    <div className="text-xs text-slate-500 mt-1 font-medium">样本覆盖主流咨询场景</div>
                  </div>
-                 <div className="p-4 rounded-xl bg-slate-800/50 border border-white/5">
+                 <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-sm">
                     <div className="text-xs text-slate-400 uppercase font-bold mb-2">Top Concern</div>
-                    <div className="text-3xl font-black text-cyan-400">房价趋势</div>
-                    <div className="text-xs text-slate-500 mt-1">占比 15.5% (Rank 1)</div>
+                    <div className="text-3xl font-black text-cyan-500">房价趋势</div>
+                    <div className="text-xs text-slate-500 mt-1 font-medium">占比 15.5% (Rank 1)</div>
                  </div>
               </div>
 
@@ -215,24 +220,24 @@ const ProjectCommunityGenPage: React.FC = () => {
                    { label: "公摊比例", detail: "热门户型公摊比例大概多少？", percent: 1.9 },
                    { label: "临街噪音", detail: "临街楼栋会不会很吵？", percent: 1.9 },
                  ].map((item, idx) => (
-                   <div key={idx} className="flex items-center space-x-4 group">
-                      <div className={`w-8 text-xs font-mono text-center font-bold ${idx < 3 ? 'text-cyan-400 text-sm' : 'text-slate-500'}`}>
+                   <div key={idx} className="flex items-center space-x-4 group p-2 hover:bg-white rounded-lg transition-colors">
+                      <div className={`w-8 text-xs font-mono text-center font-black ${idx < 3 ? 'text-cyan-600 text-sm' : 'text-slate-400'}`}>
                         {idx + 1}
                       </div>
                       <div className="flex-1">
                          <div className="flex justify-between text-xs mb-1.5">
                             <div className="flex flex-col">
-                               <span className={`font-medium ${idx < 3 ? 'text-white text-sm' : 'text-slate-300'}`}>
+                               <span className={`font-bold ${idx < 3 ? 'text-slate-800 text-sm' : 'text-slate-600'}`}>
                                  {item.label}
                                  {idx < 3 && <i className="fas fa-fire text-orange-500 ml-2 text-xs"></i>}
                                </span>
-                               <span className="text-xs text-slate-500 mt-0.5 italic">{item.detail}</span>
+                               <span className="text-xs text-slate-400 mt-0.5 italic">{item.detail}</span>
                             </div>
-                            <span className={`${idx < 3 ? 'text-cyan-400 font-bold' : 'text-slate-400'}`}>{item.percent}%</span>
+                            <span className={`${idx < 3 ? 'text-cyan-600 font-bold' : 'text-slate-400'}`}>{item.percent}%</span>
                          </div>
-                         <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
+                         <div className="h-2 w-full bg-slate-200 rounded-full overflow-hidden shadow-inner">
                             <div 
-                              className={`h-full rounded-full ${idx < 3 ? 'bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.5)]' : 'bg-slate-600 group-hover:bg-cyan-500/50 transition-colors'}`} 
+                              className={`h-full rounded-full ${idx < 3 ? 'bg-cyan-400 shadow-[0_2px_4px_rgba(34,211,238,0.4)]' : 'bg-slate-400 group-hover:bg-cyan-300 transition-colors'}`} 
                               style={{ width: `${(item.percent / 15.5) * 100}%` }}
                             ></div>
                          </div>
