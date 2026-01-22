@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微信自动化插件演示模拟器</title>
+    <style>
+        :root {
+            --wx-bg: #f2f2f2;
+            --wx-green: #07c160;
+            --wx-bar: rgba(247, 247, 247, 0.95);
+            --wx-border: #e5e5e5;
+            --sim-width: 375px;
+            --sim-height: 812px;
+            
+            /* Cyberpunk Theme Colors */
+            --cp-bg-dark: #050510;
+            --cp-panel-bg: rgba(10, 15, 30, 0.85);
+            --cp-cyan: #00f3ff;
+            --cp-pink: #bc13fe;
+            --cp-yellow: #f1c40f;
+            --cp-border: rgba(0, 243, 255, 0.3);
+            --cp-text-main: #e0e0e0;
+            --cp-text-dim: #8892b0;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: var(--cp-bg-dark);
+            background-image: 
+                linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px),
+                radial-gradient(circle at 50% 50%, rgba(20, 30, 60, 1), #000);
+            background-size: 30px 30px, 30px 30px, 100% 100%;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: var(--cp-text-main);
+            overflow: hidden;
+        }
+
+        /* 布局容器 */
+        .layout {
+            display: flex;
+            gap: 80px;
+            align-items: center;
+            max-width: 1400px;
+            width: 100%;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* 左侧：控制面板 - 赛博朋克风 */
+        .control-panel {
+            background: var(--cp-panel-bg);
+            padding: 30px;
+            width: 340px;
+            height: 812px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            
+            /* Tech Border Styling */
+            border: 1px solid var(--cp-border);
+            box-shadow: 
+                0 0 20px rgba(0, 243, 255, 0.1),
+                inset 0 0 30px rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        /* Value Analysis Panel - Same style as control panel */
+        .analysis-panel {
+            background: var(--cp-panel-bg);
+            padding: 30px;
+            width: 340px;
+            height: 812px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            border: 1px solid var(--cp-border);
+            box-shadow: 
+                0 0 20px rgba(0, 243, 255, 0.1),
+                inset 0 0 30px rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+        
+        .analysis-panel::before {
+            content: '';
+            position: absolute;
+            top: -1px; left: -1px;
+            width: 20px; height: 20px;
+            border-top: 2px solid var(--cp-cyan);
+            border-left: 2px solid var(--cp-cyan);
+        }
+        .analysis-panel::after {
+            content: '';
+            position: absolute;
+            bottom: -1px; right: -1px;
+            width: 20px; height: 20px;
+            border-bottom: 2px solid var(--cp-cyan);
+            border-right: 2px solid var(--cp-cyan);
+        }
+        
+        .analysis-panel h2 {
+            margin: 0;
+            color: var(--cp-yellow);
+            font-size: 20px;
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(241, 196, 15, 0.5);
+            display: flex;
+            align-items: center;
+        }
+        
+        .analysis-panel h2::before {
+            content: '★';
+            margin-right: 10px;
+            font-size: 14px;
+        }
+
+        /* Tech Decoration Lines */
+        .control-panel::before {
+            content: '';
+            position: absolute;
+            top: -1px; left: -1px;
+            width: 20px; height: 20px;
+            border-top: 2px solid var(--cp-cyan);
+            border-left: 2px solid var(--cp-cyan);
+        }
+        .control-panel::after {
+            content: '';
+            position: absolute;
+            bottom: -1px; right: -1px;
+            width: 20px; height: 20px;
+            border-bottom: 2px solid var(--cp-cyan);
+            border-right: 2px solid var(--cp-cyan);
+        }
+
+        .panel-header {
+            border-bottom: 1px solid var(--cp-border);
+            padding-bottom: 15px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .control-panel h2 {
+            margin: 0;
+            color: var(--cp-cyan);
+            font-size: 20px;
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+            display: flex;
+            align-items: center;
+        }
+        
+        .control-panel h2::before {
+            content: '►';
+            margin-right: 10px;
+            font-size: 14px;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* 按钮 - 科技感 */
+        .btn {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 18px 20px;
+            background: rgba(0, 243, 255, 0.05);
+            color: var(--cp-text-main);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            margin-bottom: 0;
+            text-align: left;
+        }
+
+        .btn:hover {
+            background: rgba(0, 243, 255, 0.15);
+            border-color: var(--cp-cyan);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+            transform: translateX(5px);
+        }
+        
+        .btn:active {
+            transform: translateX(2px);
+        }
+
+        .btn-icon {
+            margin-right: 15px;
+            font-size: 24px;
+            filter: drop-shadow(0 0 5px rgba(255,255,255,0.5));
+        }
+
+        .btn-content {
+            flex: 1;
+        }
+        .btn-title {
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+            color: #fff;
+        }
+        .btn-desc {
+            font-size: 11px;
+            color: var(--cp-text-dim);
+            font-family: 'Courier New', monospace;
+        }
+
+        /* 价值说明卡片 - 全息投影风格 */
+        .value-card {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--cp-pink);
+            border-radius: 4px;
+            padding: 20px;
+            color: var(--cp-text-main);
+            margin-top: auto;
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 0 20px rgba(188, 19, 254, 0.2), inset 0 0 20px rgba(188, 19, 254, 0.1);
+            display: none;
+            position: relative;
+        }
+        
+        .value-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .value-card.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            display: block;
+        }
+
+        .value-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px dashed rgba(188, 19, 254, 0.5);
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+        }
+
+        .value-title {
+            font-size: 12px;
+            color: var(--cp-pink);
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .value-badge {
+            background: var(--cp-pink);
+            color: black;
+            font-size: 10px;
+            padding: 2px 6px;
+            font-weight: bold;
+        }
+
+        .value-content {
+            font-size: 16px;
+            line-height: 1.6;
+            text-shadow: 0 0 2px rgba(255,255,255,0.3);
+            position: relative;
+            z-index: 2;
+        }
+
+        .value-highlight {
+            color: var(--cp-cyan);
+            font-weight: bold;
+            text-shadow: 0 0 8px rgba(0, 243, 255, 0.6);
+        }
+
+        /* 手机模拟器 - 保持微信样式，但外壳科技化 */
+        .phone {
+            width: var(--sim-width);
+            height: var(--sim-height);
+            background: #000;
+            border-radius: 50px;
+            padding: 12px;
+            box-shadow: 
+                0 0 0 2px #333,
+                0 0 0 6px #1a1a1a,
+                0 0 40px rgba(0, 243, 255, 0.2); /* Tech Glow */
+            position: relative;
+            z-index: 10;
+            border: 1px solid #333;
+        }
+        /* 灵动岛/刘海 */
+        .notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 35px;
+            background: black;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            z-index: 200;
+        }
+
+        /* 屏幕内容 */
+        .screen {
+            width: 100%;
+            height: 100%;
+            background: var(--wx-bg);
+            border-radius: 40px;
+            overflow: hidden;
+            position: relative;
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+            /* Fix blurry text rendering */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transform: translateZ(0); /* Force GPU */
+        }
+
+        /* 顶部状态栏 */
+        .status-bar {
+            height: 50px;
+            background: rgba(247, 247, 247, 0.98); /* Less transparent to reduce blur noise */
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding: 0 25px 10px 25px;
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 100;
+            position: relative;
+            /* Reduce blur radius */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 1px 0 rgba(0,0,0,0.05);
+        }
+
+        /* 顶部导航栏 */
+        .nav-bar {
+            height: 44px;
+            background: rgba(247, 247, 247, 0.98);
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            font-weight: 600;
+            font-size: 17px;
+            z-index: 99;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        .nav-left { position: absolute; left: 15px; display: flex; align-items: center; cursor: pointer; }
+        .nav-right { position: absolute; right: 15px; display: flex; gap: 15px; cursor: pointer; }
+        .back-icon { width: 12px; height: 20px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 20'%3E%3Cpath fill='black' d='M10.5 19.5L1.5 10.5 10.5 1.5' stroke='black' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center/contain; margin-right: 5px; }
+
+        /* 页面容器 */
+        .page {
+            position: absolute;
+            top: 94px; /* 50+44 */
+            bottom: 80px;
+            width: 100%;
+            background: var(--wx-bg);
+            overflow-y: auto;
+            display: none; /* 默认隐藏 */
+            /* 隐藏滚动条 */
+            -ms-overflow-style: none;
+            scrollbar-width: none; 
+        }
+        .page::-webkit-scrollbar { display: none; }
+        .page.active { display: block; animation: fadeIn 0.3s ease; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 底部 Tab */
+        .tab-bar {
+            height: 80px;
+            background: rgba(247, 247, 247, 0.98);
+            border-top: 1px solid rgba(0,0,0,0.1);
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            padding-top: 10px;
+            box-sizing: border-box;
+            font-size: 10px;
+            color: #999;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding-bottom: 20px; /* Home indicator space */
+        }
+        .tab-item { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; transition: transform 0.1s; }
+        .tab-item:active { transform: scale(0.95); }
+        .tab-item.active { color: var(--wx-green); }
+        .tab-icon { width: 28px; height: 28px; background-size: contain; background-repeat: no-repeat; background-position: center; transition: all 0.2s; }
+
+        /* 微信 UI 组件 */
+        .list-item {
+            background: white;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .list-item:active { background: #f5f5f5; }
+        .avatar {
+            width: 44px;
+            height: 44px;
+            background: #eee;
+            border-radius: 6px;
+            margin-right: 14px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .list-content { flex: 1; }
+        .list-title { font-size: 17px; color: #000; margin-bottom: 4px; font-weight: 500; }
+        .list-subtitle { font-size: 14px; color: #999; width: 220px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .list-btn {
+            background: var(--wx-green);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 14px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        /* 聊天气泡 */
+        .chat-container { padding: 15px; display: flex; flex-direction: column; gap: 20px; }
+        .message { display: flex; gap: 10px; max-width: 85%; animation: msgSlide 0.3s ease-out; }
+        @keyframes msgSlide {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .message.self { align-self: flex-end; flex-direction: row-reverse; }
+        .bubble {
+            padding: 12px 16px;
+            background: white;
+            border-radius: 8px;
+            font-size: 16px;
+            line-height: 1.5;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            position: relative;
+            word-wrap: break-word;
+            color: #000;
+            font-weight: 500;
+            text-shadow: none; /* Remove any potential shadow inheritance */
+        }
+        .message.self .bubble { background: #95ec69; }
+        
+        /* 表单样式 */
+        .form-group { background: white; margin-top: 12px; padding: 0 20px; }
+        .form-cell {
+            padding: 18px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        .form-label { width: 90px; font-size: 17px; color: #000; }
+        .form-input { flex: 1; border: none; outline: none; font-size: 17px; text-align: left; color: #333; background: transparent; }
+
+        /* 自动化模拟元素 */
+        .auto-cursor {
+            width: 30px;
+            height: 30px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300f3ff' stroke-width='2'%3E%3Cpath d='M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z'/%3E%3C/svg%3E") no-repeat center/contain;
+            position: absolute;
+            z-index: 9999;
+            pointer-events: none;
+            transition: all 0.6s cubic-bezier(0.22, 0.61, 0.36, 1);
+            display: none;
+            filter: drop-shadow(0 0 5px #00f3ff);
+        }
+        .click-effect {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(0, 243, 255, 0.1);
+            border: 2px solid #00f3ff;
+            transform: scale(0);
+            animation: ripple 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+            z-index: 9998;
+            box-shadow: 0 0 10px #00f3ff;
+        }
+        @keyframes ripple {
+            to { transform: scale(2.5); opacity: 0; }
+        }
+
+        .system-toast {
+            position: absolute;
+            top: 110px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(10, 20, 30, 0.9);
+            color: #00f3ff;
+            padding: 12px 24px;
+            border: 1px solid #00f3ff;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            z-index: 2000;
+            display: none;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+            white-space: nowrap;
+            letter-spacing: 1px;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+        }
+        .system-toast::before {
+            content: '[SYSTEM]';
+            margin-right: 8px;
+            color: #fff;
+            font-weight: bold;
+        }
+        
+        /* 底部 Home Indicator */
+        .home-indicator {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 130px;
+            height: 5px;
+            background: #000;
+            border-radius: 3px;
+            z-index: 1000;
+        }
+
+        /* Floating Value Window */
+        .floating-value {
+            position: absolute;
+            bottom: 280px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 10, 20, 0.95);
+            border: 1px solid var(--cp-yellow);
+            border-left: 5px solid var(--cp-yellow);
+            padding: 15px 25px;
+            border-radius: 4px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8), 0 0 10px rgba(241, 196, 15, 0.3);
+            z-index: 3000;
+            width: 85%;
+            display: none;
+            animation: floatUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
+        }
+        @keyframes floatUp {
+            from { transform: translate(-50%, 20px); opacity: 0; }
+            to { transform: translate(-50%, 0); opacity: 1; }
+        }
+        .fv-title { color: var(--cp-yellow); font-size: 16px; font-weight: bold; margin-bottom: 8px; display:flex; align-items:center; gap:8px;}
+        .fv-desc { color: #fff; font-size: 14px; line-height: 1.5; }
+    </style>
+</head>
+<body>
+
+<div class="layout">
+    <div class="control-panel">
+        <div class="panel-header">
+            <h2>自动化控制台</h2>
+        </div>
+        
+        <div style="flex:1; display:flex; flex-direction:column; gap:15px; max-height: 250px;">
+            <button class="btn" onclick="handleScenario1Click()" id="btnScenario1">
+                <span class="btn-icon">👥</span>
+                <div class="btn-content">
+                    <div class="btn-title">自动添加新好友</div>
+                    <div class="btn-desc">PROTOCOL: AUTO_ADD_FRIEND</div>
+                </div>
+            </button>
+            
+            <button class="btn" onclick="handleScenario2Click()" id="btnScenario2">
+                <span class="btn-icon">💬</span>
+                <div class="btn-content">
+                    <div class="btn-title">视频号私信回复</div>
+                    <div class="btn-desc">PROTOCOL: CHANNEL_REPLY</div>
+                </div>
+            </button>
+            
+            <button class="btn" style="border-color:#ff4757; color:#ff4757;" onclick="resetSim()">
+                <span class="btn-icon">⚡️</span>
+                <div class="btn-content">
+                    <div class="btn-title">重新开始</div>
+                    <div class="btn-desc">SYSTEM_RESTART</div>
+                </div>
+            </button>
+        </div>
+
+        <!-- 运行日志卡片 -->
+        <div class="value-card show" id="logCard" style="margin-top:0; flex:1; overflow:hidden; display:flex; flex-direction:column;">
+            <div class="value-header">
+                <div class="value-title">SYSTEM RUN LOG</div>
+                <div class="value-badge">TERMINAL</div>
+            </div>
+            <div class="value-content" style="flex:1; overflow-y:auto; font-family:'Courier New', monospace; font-size:12px;" id="sysLog">
+                <div style="color:var(--cp-text-dim)">> System Initialized.</div>
+                <div style="color:var(--cp-text-dim)">> Ready for commands.</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="phone">
+        <div class="notch"></div>
+        <div class="screen" id="screen">
+            <!-- 系统元素 -->
+            <div class="status-bar">
+                <span>15:37</span>
+                <span>5G 📶 🔋</span>
+            </div>
+            
+            <div class="system-toast" id="toast">正在执行任务...</div>
+            <div class="auto-cursor" id="cursor"></div>
+
+            <!-- Floating Value Analysis Window -->
+            <div id="floatingValue" class="floating-value">
+                <div class="fv-title" id="fvTitle">
+                    <span>💡</span> 价值分析
+                </div>
+                <div class="fv-desc" id="fvDesc"></div>
+            </div>
+
+            <!-- 页面1：通讯录 (场景1入口) -->
+            <div class="nav-bar" id="navContacts" style="display:none">
+                <div class="nav-right">🔍 ➕</div>
+                <span>通讯录</span>
+            </div>
+            <div class="page" id="pageContacts">
+                <div class="list-item" onclick="manualClick(this)">
+                    <div class="avatar" style="background:#fa9d3b">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                    </div>
+                    <div class="list-content">
+                        <div class="list-title">新的朋友</div>
+                    </div>
+                    <div style="background:#fa5151;color:white;border-radius:18px;padding:2px 8px;font-size:12px;font-weight:bold">2</div>
+                </div>
+                <div class="list-item">
+                    <div class="avatar" style="background:#07c160">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
+                    </div>
+                    <div class="list-content"><div class="list-title">群聊</div></div>
+                </div>
+                <div class="list-item">
+                    <div class="avatar" style="background:#2782d7">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M17.63 5.84C17.27 5.33 16.67 5 16 5L5 5.01C3.9 5.01 3 5.9 3 7v10c0 1.1.9 1.99 2 1.99L16 19c.67 0 1.27-.33 1.63-.84L22 12l-4.37-6.16z"/></svg>
+                    </div>
+                    <div class="list-content"><div class="list-title">标签</div></div>
+                </div>
+                <div style="padding:8px 16px;color:#999;font-size:13px;background:#f7f7f7;font-weight:600">A</div>
+                <div class="list-item">
+                    <div class="avatar" style="background:#ccc">A</div>
+                    <div class="list-content"><div class="list-title">阿强</div></div>
+                </div>
+            </div>
+
+            <!-- 页面2：新的朋友列表 -->
+            <div class="nav-bar" id="navNewFriends" style="display:none">
+                <div class="nav-left" onclick="goBack('pageContacts', 'navContacts')"><span class="back-icon"></span>通讯录</div>
+                <span>新的朋友</span>
+                <div class="nav-right" style="font-size:15px;font-weight:normal">添加朋友</div>
+            </div>
+            <div class="page" id="pageNewFriends">
+                <div style="padding:12px 16px;color:#666;font-size:14px">近三天</div>
+                <div class="list-item" id="targetFriend1">
+                    <div class="avatar" style="background:#f1c40f">九</div>
+                    <div class="list-content">
+                        <div class="list-title">我是九九</div>
+                        <div class="list-subtitle">来源：扫一扫</div>
+                    </div>
+                    <button class="list-btn">接受</button>
+                </div>
+                <div class="list-item">
+                    <div class="avatar" style="background:#9b59b6">光</div>
+                    <div class="list-content">
+                        <div class="list-title">光之力</div>
+                        <div class="list-subtitle">来源：名片分享</div>
+                    </div>
+                    <button class="list-btn">接受</button>
+                </div>
+            </div>
+
+            <!-- 页面3：添加好友设置页 -->
+            <div class="nav-bar" id="navAddSetting" style="display:none">
+                <div class="nav-left"><span class="back-icon"></span>返回</div>
+                <span>朋友设置</span>
+                <div class="nav-right" style="color:#07c160;font-size:16px;font-weight:600" id="btnFinishAdd">完成</div>
+            </div>
+            <div class="page" id="pageAddSetting" style="background:#f2f2f2">
+                <div style="text-align:center;padding:30px 20px;">
+                    <div class="avatar" style="width:70px;height:70px;margin:0 auto;background:#f1c40f;font-size:24px;box-shadow:0 4px 10px rgba(0,0,0,0.1)">九</div>
+                    <h3 style="margin:15px 0 5px 0;font-size:20px">我是九九</h3>
+                    <div style="color:#999;font-size:14px">地区：江苏 南京</div>
+                </div>
+                <div class="form-group" style="border-radius:10px">
+                    <div class="form-cell">
+                        <span class="form-label">备注名</span>
+                        <input type="text" class="form-input" id="inputRemark" value="我是九九">
+                    </div>
+                    <div class="form-cell">
+                        <span class="form-label">标签</span>
+                        <div style="flex:1;text-align:right;color:#999;display:flex;justify-content:flex-end;align-items:center" id="inputTag">
+                            <span style="background:#e8f6ef;color:#07c160;padding:2px 6px;border-radius:4px;font-size:13px;display:none" id="tagValue">新客户</span>
+                            <span style="margin-left:5px">›</span>
+                        </div>
+                    </div>
+                    <div class="form-cell" style="border-bottom:none">
+                        <span class="form-label">朋友权限</span>
+                        <div style="flex:1;text-align:right;color:#999">›</div>
+                    </div>
+                </div>
+                <div style="padding:15px 20px;color:#666;font-size:14px">
+                    <div style="display:flex;align-items:center;margin-bottom:15px;background:white;padding:15px;border-radius:10px" id="checkCircleContainer">
+                        <div style="width:22px;height:22px;border:1px solid #ccc;border-radius:50%;margin-right:12px;display:flex;align-items:center;justify-content:center" id="checkCircle"></div>
+                        <span>不让他看我</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 页面4：聊天页 -->
+            <div class="nav-bar" id="navChat" style="display:none">
+                <div class="nav-left"><span class="back-icon"></span>微信</div>
+                <span id="chatTitle">我是九九</span>
+                <div class="nav-right">
+                    <span style="font-size:20px;letter-spacing:-2px">•••</span>
+                </div>
+            </div>
+            <div class="page" id="pageChat" style="background:#ededed">
+                <div class="chat-container" id="chatContainer">
+                    <div style="text-align:center;color:#b2b2b2;font-size:12px;margin:10px 0;background:rgba(0,0,0,0.05);padding:4px 10px;border-radius:4px;align-self:center">你已添加了九九，现在可以开始聊天了。</div>
+                </div>
+                <div style="position:absolute;bottom:0;width:100%;min-height:80px;background:#f7f7f7;border-top:1px solid #dcdcdc;display:flex;align-items:flex-start;padding:10px 10px 30px 10px;box-sizing:border-box;gap:10px">
+                    <div style="font-size:28px;color:#333">🔊</div>
+                    <div style="flex:1;min-height:36px;background:white;border-radius:6px;display:flex;align-items:center;padding:6px 10px;color:#333;font-size:16px" id="chatInput"></div>
+                    <div style="font-size:28px;color:#333">☺</div>
+                    <div style="font-size:28px;color:#333">⊕</div>
+                </div>
+            </div>
+
+            <!-- 页面5：发现页 (场景2入口) -->
+            <div class="nav-bar" id="navDiscover" style="display:none">
+                <span>发现</span>
+            </div>
+            <div class="page" id="pageDiscover">
+                <div class="list-item">
+                    <div class="avatar" style="background:transparent"><img src="https://pp.myapp.com/ma_icon/0/icon_52712534_1730948488/96" style="width:100%"></div>
+                    <div class="list-content"><div class="list-title">朋友圈</div></div>
+                    <div style="color:#999;font-size:18px">›</div>
+                </div>
+                <div class="list-item" style="margin-top:10px" id="entryChannels">
+                    <div class="avatar" style="background:transparent"><img src="https://pp.myapp.com/ma_icon/0/icon_52712534_1730948488/96" style="width:100%;filter:hue-rotate(45deg)"></div>
+                    <div class="list-content"><div class="list-title">视频号</div></div>
+                    <div style="display:flex;align-items:center;gap:10px">
+                        <div style="background:#fa5151;width:10px;height:10px;border-radius:50%"></div>
+                        <div style="color:#999;font-size:18px">›</div>
+                    </div>
+                </div>
+                <div class="list-item" style="margin-top:10px">
+                    <div class="avatar" style="background:transparent">🔍</div>
+                    <div class="list-content"><div class="list-title">搜一搜</div></div>
+                    <div style="color:#999;font-size:18px">›</div>
+                </div>
+            </div>
+
+            <!-- 页面6：视频号消息页 -->
+            <div class="nav-bar" id="navChannelsMsg" style="display:none">
+                <div class="nav-left"><span class="back-icon"></span>视频号</div>
+                <span>私信</span>
+            </div>
+            <div class="page" id="pageChannelsMsg">
+                <div class="list-item">
+                    <div class="avatar" style="background:#e67e22">私</div>
+                    <div class="list-content">
+                        <div class="list-title">视频号私信</div>
+                        <div class="list-subtitle">暂无新消息</div>
+                    </div>
+                </div>
+                <div class="list-item" id="entryGreeting">
+                    <div class="avatar" style="background:#3498db">打</div>
+                    <div class="list-content">
+                        <div class="list-title">打招呼消息</div>
+                        <div class="list-subtitle">3条新消息</div>
+                    </div>
+                    <div style="background:#fa5151;color:white;border-radius:18px;padding:2px 8px;font-size:12px;font-weight:bold">3</div>
+                </div>
+            </div>
+
+            <!-- 页面7：打招呼列表 -->
+            <div class="nav-bar" id="navGreetingList" style="display:none">
+                <div class="nav-left"><span class="back-icon"></span>私信</div>
+                <span>打招呼消息</span>
+            </div>
+            <div class="page" id="pageGreetingList">
+                <div class="list-item" id="msgItem1">
+                    <div class="avatar" style="background:#95a5a6">客</div>
+                    <div class="list-content">
+                        <div class="list-title">潜在客户A</div>
+                        <div class="list-subtitle">你好，请问河西楼盘还有吗？</div>
+                    </div>
+                    <div style="font-size:12px;color:#999">14:17</div>
+                </div>
+                <div class="list-item">
+                    <div class="avatar" style="background:#7f8c8d">客</div>
+                    <div class="list-content">
+                        <div class="list-title">咨询者B</div>
+                        <div class="list-subtitle">怎么联系你们？</div>
+                    </div>
+                    <div style="font-size:12px;color:#999">14:15</div>
+                </div>
+            </div>
+
+            <!-- 底部导航 (全局) -->
+            <div class="tab-bar" id="tabBar">
+                <div class="tab-item" onclick="switchTab('wechat')" id="tabWechat">
+                    <div class="tab-icon" style="background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI2FhYSI+PHBhdGggZD0iTTEyIDJDNi40OCAyIDIgNS44NSAyIDEwLjU1YzAgMi43MSAxLjQ5IDUuMTUgMy44MiA2Ljc2LS4xNi45Ny0uNTkgMi42Ny0uNiAyLjczLS4wMS4xMi4xMi4yMS4yMy4xNC45Ni0uNjEgMi42Ny0xLjcyIDMuMjktMi4xMi40LjA2LjgxLjEuMjMuMWw1LjAzLS4wMmM1LjUyIDAgMTAtMy44NSAxMC04LjU1UzE3LjUyIDIgMTIgMnoiLz48L3N2Zz4=');"></div>
+                    微信
+                </div>
+                <div class="tab-item active" onclick="switchTab('contacts')" id="tabContacts">
+                    <div class="tab-icon" style="background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzA3YzE2MCI+PHBhdGggZD0iTTE5IDNoLTRjLTEuMSAwLTIgLjktMiAydjE0YzAgMS4xLjkgMiAyIDJoNGMxLjEgMCAyLS45IDItMnYtNGgwVjVjMC0xLjEtLjktMi0yLTJ6bTAgMTZoLTR2LTRoNFY1aC00VjVoNHYxNHptLTggMkg3Yy0xLjEgMC0yLS45LTItMnYtNGgwVjVjMC0xLjEuOS0yIDItMmg0YzEuMSAwIDIgLjkgMiAyvjE0YzAgMS4xLS45IDIgMiAyem0wLTE2SDd2NGg0VjV6Ii8+PC9zdmc+');"></div>
+                    通讯录
+                </div>
+                <div class="tab-item" onclick="switchTab('discover')" id="tabDiscover">
+                    <div class="tab-icon" style="background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI2FhYSI+PHBhdGggZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyczQuNDggMTA 1MCAxMCAxMC00LjQ4IDEwLTEwUzE3LjUyIDIgMTIgMnptMCAxOGMtNC40MSAwLTgtMy41OS04LThzMy41OS04IDgtOCA4IDMuNTkgOCA4LTMuNTkgOC04IDh6bS01LjUtMi41bDEuOTItNS41IDUuNS0xLjkyLTEuOTIgNS41LTUuNSAxLjkyem0zLjU4LTUuMDhjLS44MyAwLTEuNS42Ny0xLjUgMS41cy42NyAxLjUgMS41 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zIi8+PC9zdmc+');"></div>
+                    发现
+                </div>
+                <div class="tab-item" onclick="switchTab('me')" id="tabMe">
+                    <div class="tab-icon" style="background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI2FhYSI+PHBhdGggZD0iTTEyIDEyYzIuMjEgMCA0LTEuNzkgNC00czLTEuNzktNC00LTQtNCAxLjc5LTQgNCAxLjc5IDQgNCA0em0wIDJjLTIuNjcgMC04IDEuMzQtOC 4djJoMTZ2LTJjMC0yLjY2LTUuMzMtNC04LTR6Ii8+PC9zdmc+');"></div>
+                    我
+                </div>
+            </div>
+
+            <!-- Home Indicator -->
+            <div class="home-indicator"></div>
+        </div>
+    </div>
+
+    <div class="analysis-panel">
+        <div class="panel-header">
+            <h2>价值分析模块</h2>
+        </div>
+        <div id="valueCard" style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
+            <div class="value-header" style="border-color:rgba(241, 196, 15, 0.5);">
+                <div class="value-title" style="color:var(--cp-yellow);">BUSINESS VALUE ANALYSIS</div>
+                <div class="value-badge" style="background:var(--cp-yellow);">INSIGHT_LOG</div>
+            </div>
+            <div class="value-content" style="flex:1; overflow-y:auto; padding-right:5px;" id="valueContent">
+                <div style="color:var(--cp-text-dim); font-size:12px;">Waiting for analysis...</div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // 页面管理
+    function showPage(pageId, navId) {
+        document.querySelectorAll('.page').forEach(el => {
+            el.classList.remove('active');
+            el.style.display = 'none';
+        });
+        document.querySelectorAll('.nav-bar').forEach(el => el.style.display = 'none');
+        const page = document.getElementById(pageId);
+        page.style.display = 'block';
+        setTimeout(() => page.classList.add('active'), 10);
+        if(navId) document.getElementById(navId).style.display = 'flex';
+    }
+
+    // Tab 管理
+    function switchTab(tab) {
+        document.querySelectorAll('.tab-item').forEach(el => el.classList.remove('active'));
+        // 重置图标颜色逻辑（简化处理，实际应该换SVG颜色）
+        const svgColor = (color) => `data:image/svg+xml;base64,` + btoa(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="${color}">` + atob(document.getElementById('tab'+tab.charAt(0).toUpperCase()+tab.slice(1)).querySelector('.tab-icon').style.backgroundImage.split(',')[1].slice(0,-2)) + `</svg>`);
+        
+        if (tab === 'contacts') {
+            document.getElementById('tabContacts').classList.add('active');
+            showPage('pageContacts', 'navContacts');
+        } else if (tab === 'discover') {
+            document.getElementById('tabDiscover').classList.add('active');
+            showPage('pageDiscover', 'navDiscover');
+        } else if (tab === 'wechat') {
+            document.getElementById('tabWechat').classList.add('active');
+        }
+    }
+
+    // 初始化
+    let currentSessionId = 0;
+    let isPaused = false;
+    let activeScenario = null; // null, 1, 2
+    resetSim();
+
+    function log(msg) {
+        const logBox = document.getElementById('sysLog');
+        const time = new Date().toLocaleTimeString('en-US', {hour12: false});
+        const div = document.createElement('div');
+        div.style.marginBottom = '4px';
+        div.innerHTML = `<span style="color:#00f3ff">[${time}]</span> ${msg}`;
+        logBox.appendChild(div);
+        logBox.scrollTop = logBox.scrollHeight;
+    }
+
+    function resetSim() {
+        currentSessionId++;
+        isPaused = false;
+        activeScenario = null;
+        
+        // Reset buttons
+        updateScenarioBtnState(1, 'reset');
+        updateScenarioBtnState(2, 'reset');
+        
+        switchTab('contacts');
+        document.getElementById('toast').style.display = 'none';
+        document.getElementById('cursor').style.display = 'none';
+        document.getElementById('chatContainer').innerHTML = '<div style="text-align:center;color:#b2b2b2;font-size:12px;margin:10px 0;background:rgba(0,0,0,0.05);padding:4px 10px;border-radius:4px;align-self:center">你已添加了九九，现在可以开始聊天了。</div>';
+        document.getElementById('checkCircle').innerHTML = '';
+        document.getElementById('checkCircle').style.background = 'transparent';
+        document.getElementById('checkCircle').style.border = '1px solid #ccc';
+        document.getElementById('tabBar').style.display = 'flex';
+        // document.getElementById('valueCard').classList.remove('show'); // Keep it shown
+        document.getElementById('tagValue').style.display = 'none';
+        document.getElementById('valueContent').innerHTML = '<div style="color:var(--cp-text-dim); font-size:12px;">Waiting for analysis...</div>';
+        document.getElementById('sysLog').innerHTML = '<div style="color:var(--cp-text-dim)">> System Reset.</div><div style="color:var(--cp-text-dim)">> Ready.</div>';
+        
+        // 恢复初始状态
+        if(document.querySelector('.click-effect')) document.querySelector('.click-effect').remove();
+    }
+
+    function handleScenario1Click() {
+        if (activeScenario === 1) {
+            togglePause();
+        } else {
+            startScenario1();
+        }
+    }
+
+    function handleScenario2Click() {
+        if (activeScenario === 2) {
+            togglePause();
+        } else {
+            startScenario2();
+        }
+    }
+
+    function togglePause() {
+        if (!activeScenario) return;
+        
+        isPaused = !isPaused;
+        updateScenarioBtnState(activeScenario, isPaused ? 'paused' : 'running');
+        
+        if(isPaused) log('>> SYSTEM PAUSED');
+        else log('>> SYSTEM RESUMED');
+    }
+
+    function updateScenarioBtnState(scenarioId, state) {
+        const btn = document.getElementById('btnScenario' + scenarioId);
+        const icon = btn.querySelector('.btn-icon');
+        const title = btn.querySelector('.btn-title');
+        const desc = btn.querySelector('.btn-desc');
+        
+        // Reset colors first
+        btn.style.borderColor = 'rgba(0, 243, 255, 0.2)';
+        btn.style.color = 'var(--cp-text-main)';
+        
+        if (state === 'reset') {
+            if (scenarioId === 1) {
+                icon.innerText = '👥';
+                title.innerText = '自动添加新好友';
+                desc.innerText = 'PROTOCOL: AUTO_ADD_FRIEND';
+            } else {
+                icon.innerText = '💬';
+                title.innerText = '视频号私信回复';
+                desc.innerText = 'PROTOCOL: CHANNEL_REPLY';
+            }
+        } else if (state === 'running') {
+            icon.innerText = '⏸';
+            title.innerText = '暂停运行'; // Or "正在运行..."
+            desc.innerText = 'SYSTEM_RUNNING... CLICK TO PAUSE';
+            btn.style.borderColor = 'var(--cp-green)';
+            btn.style.color = '#07c160';
+        } else if (state === 'paused') {
+            icon.innerText = '▶';
+            title.innerText = '继续运行';
+            desc.innerText = 'SYSTEM_PAUSED... CLICK TO RESUME';
+            btn.style.borderColor = 'var(--cp-yellow)';
+            btn.style.color = 'var(--cp-yellow)';
+        }
+    }
+    
+    // 价值说明控制
+    function showValue(title, content) {
+        const box = document.getElementById('valueContent');
+        if(box.innerText === 'Waiting for analysis...') box.innerHTML = '';
+        
+        const time = new Date().toLocaleTimeString('en-US', {hour12: false});
+        const div = document.createElement('div');
+        div.style.marginBottom = '12px';
+        div.style.borderLeft = '2px solid var(--cp-cyan)';
+        div.style.paddingLeft = '10px';
+        div.style.animation = 'fadeIn 0.5s ease';
+        
+        div.innerHTML = `
+            <div style="font-size:10px; color:var(--cp-text-dim); font-family:'Courier New', monospace; margin-bottom:2px;">[${time}]</div>
+            <div style="color:var(--cp-yellow);font-weight:bold;margin-bottom:4px;font-size:12px">${title}</div>
+            <div style="font-size:13px; line-height:1.4;">${content}</div>
+        `;
+        
+        box.appendChild(div);
+        box.scrollTop = box.scrollHeight;
+
+        // Show floating window
+        const fw = document.getElementById('floatingValue');
+        const fvTitle = document.getElementById('fvTitle');
+        const fvDesc = document.getElementById('fvDesc');
+        
+        if(fw && fvTitle && fvDesc) {
+            fvTitle.innerHTML = `<span>💡</span> ${title}`;
+            fvDesc.innerHTML = content;
+            fw.style.display = 'block';
+            
+            if(window.fvTimeout) clearTimeout(window.fvTimeout);
+            window.fvTimeout = setTimeout(() => {
+                fw.style.display = 'none';
+            }, 5000);
+        }
+    }
+
+    function showLimitation(title, content) {
+        const box = document.getElementById('valueContent');
+        const time = new Date().toLocaleTimeString('en-US', {hour12: false});
+        const div = document.createElement('div');
+        div.style.marginBottom = '12px';
+        div.style.borderLeft = '2px solid #ff4757';
+        div.style.paddingLeft = '10px';
+        div.style.animation = 'fadeIn 0.5s ease';
+        
+        div.innerHTML = `
+            <div style="font-size:10px; color:var(--cp-text-dim); font-family:'Courier New', monospace; margin-bottom:2px;">[${time}]</div>
+            <div style="color:#ff4757;font-weight:bold;margin-bottom:4px;font-size:12px">⚠️ ${title}</div>
+            <div style="font-size:13px; line-height:1.4;">${content}</div>
+        `;
+        
+        box.appendChild(div);
+        box.scrollTop = box.scrollHeight;
+    }
+
+    function showTechInsight(question, answer) {
+        const box = document.getElementById('valueContent');
+        const time = new Date().toLocaleTimeString('en-US', {hour12: false});
+        const div = document.createElement('div');
+        div.style.marginBottom = '12px';
+        div.style.borderLeft = '2px solid var(--cp-cyan)';
+        div.style.paddingLeft = '10px';
+        div.style.background = 'rgba(0, 243, 255, 0.05)';
+        div.style.padding = '8px 8px 8px 10px';
+        div.style.animation = 'fadeIn 0.5s ease';
+        
+        div.innerHTML = `
+            <div style="font-size:10px; color:var(--cp-text-dim); font-family:'Courier New', monospace; margin-bottom:4px;">[${time}] TECH_ANALYSIS</div>
+            <div style="color:var(--cp-cyan);font-weight:bold;margin-bottom:4px;font-size:12px">❓ ${question}</div>
+            <div style="font-size:13px; line-height:1.4; color:var(--cp-text-main)">${answer}</div>
+        `;
+        
+        box.appendChild(div);
+        box.scrollTop = box.scrollHeight;
+    }
+
+    // 自动化动作模拟库
+    const sleep = (ms) => new Promise((resolve, reject) => {
+        const sId = currentSessionId;
+        const start = Date.now();
+        
+        const check = () => {
+            if(sId !== currentSessionId) {
+                reject('INTERRUPT');
+                return;
+            }
+            
+            if(isPaused) {
+                setTimeout(check, 100);
+                return;
+            }
+            
+            const elapsed = Date.now() - start;
+            if(elapsed >= ms) {
+                resolve();
+            } else {
+                setTimeout(check, Math.min(100, ms - elapsed)); // Check frequently but respect remaining time
+            }
+        };
+        
+        check();
+    });
+
+    async function autoClick(selector, desc) {
+        log(`EXEC: Click target [${desc}]`);
+        const el = document.querySelector(selector);
+        if (!el) {
+            log(`ERROR: Target not found [${selector}]`);
+            return;
+        }
+        
+        const rect = el.getBoundingClientRect();
+        const screenRect = document.querySelector('.screen').getBoundingClientRect();
+        
+        // 移动光标
+        const cursor = document.getElementById('cursor');
+        cursor.style.display = 'block';
+        const top = rect.top - screenRect.top + rect.height/2;
+        const left = rect.left - screenRect.left + rect.width/2;
+        
+        cursor.style.top = top + 'px';
+        cursor.style.left = left + 'px';
+        
+        await sleep(600);
+        
+        // 点击效果
+        const ripple = document.createElement('div');
+        ripple.className = 'click-effect';
+        ripple.style.top = top - 20 + 'px';
+        ripple.style.left = left - 20 + 'px';
+        document.querySelector('.screen').appendChild(ripple);
+        setTimeout(() => ripple.remove(), 500);
+        
+        el.click();
+        await sleep(800);
+    }
+
+    async function autoInput(selector, text, desc) {
+        log(`EXEC: Input text "${text}"`);
+        const el = document.querySelector(selector);
+        if(el.tagName === 'INPUT') {
+            el.value = "";
+            for (let char of text) {
+                el.value += char;
+                await sleep(50);
+            }
+        } else {
+            el.innerText = "";
+            for (let char of text) {
+                el.innerText += char;
+                await sleep(30);
+            }
+        }
+        await sleep(500);
+    }
+
+    // 场景1：自动添加好友
+    async function startScenario1() {
+        try {
+            resetSim();
+            activeScenario = 1;
+            updateScenarioBtnState(1, 'running');
+            
+            await sleep(2000);
+            
+            document.getElementById('toast').style.display = 'block';
+            document.getElementById('toast').innerText = "⚡️ 任务开始：处理新好友";
+            
+            showValue("价值 1：极速响应", "系统<span class='value-highlight'>自动监测</span>好友申请，比人工更快发现新客户，<span class='value-highlight'>避免线索流失</span>。");
+            
+            // 1. 点击“新的朋友”
+            await autoClick('#pageContacts .list-item:first-child', "新的朋友入口");
+            showPage('pageNewFriends', 'navNewFriends');
+            
+            // 2. 点击“接受”
+            await sleep(2000);
+            showValue("价值 2：全天候值守", "无需人工盯着手机，<span class='value-highlight'>7x24小时</span>自动通过验证，提升客户满意度。");
+            await autoClick('#targetFriend1 .list-btn', "接受按钮");
+            showPage('pageAddSetting', 'navAddSetting');
+            
+            // 3. 自动打标签（新增演示细节）
+            await sleep(2000);
+            showValue("价值 3：精细化管理", "通过验证时自动<span class='value-highlight'>打标签、备注</span>，不仅是加好友，更是做<span class='value-highlight'>客户管理</span>。");
+            await sleep(5000);
+            document.getElementById('tagValue').style.display = 'inline-block'; // 模拟打标签
+            
+            // 4. 点击完成
+            await autoClick('#btnFinishAdd', "完成按钮");
+            
+            // 5. 跳转聊天页
+            showPage('pageChat', 'navChat');
+            document.getElementById('tabBar').style.display = 'none';
+            
+            // 6. 发送消息
+            await sleep(2000);
+            showValue("价值 4：标准SOP触达", "第一时间发送<span class='value-highlight'>标准营销话术</span>，建立专业形象，引导后续转化。");
+            await autoInput('#chatInput', "您好我是戴璇，很高兴认识你！", "打招呼文案");
+            await sleep(5000);
+            
+            const msgHtml = `<div class="message self"><div class="bubble">您好我是戴璇，很高兴认识你！</div></div>`;
+            document.getElementById('chatContainer').innerHTML += msgHtml;
+            document.getElementById('chatInput').innerText = "";
+            
+            document.getElementById('cursor').style.display = 'none';
+            document.getElementById('toast').innerText = "✅ 自动打招呼完成";
+            
+            await sleep(5000);
+            showLimitation("局限性 1：业务门槛（流量依赖）", "此模式仅适用于日均进线量较大的“大V”或“小B”用户。对于普通经纪人，若无大量被动进线，自动化功能将闲置，强行使用反而增加封号风险，投入产出比极低。");
+            await sleep(5000);
+            showLimitation("局限性 2：技术风控（环境指纹）", "虽然随机化操作可模拟人类节奏。但在微信严格的“行为+环境”双重风控体系下，此类作弊特征可能被识别并导致封号。");
+            
+            setTimeout(() => document.getElementById('toast').style.display = 'none', 5000);
+            
+            // Task done, reset state but keep log? Or just reset scenario state?
+            // Let's reset the button state to initial after completion?
+            // activeScenario = null;
+            // updateScenarioBtnState(1, 'reset');
+            
+        } catch(e) {
+            if(e !== 'INTERRUPT') console.error(e);
+            else log('>> TASK STOPPED');
+        }
+    }
+
+    // 场景2：视频号私信回复
+    async function startScenario2() {
+        try {
+            resetSim();
+            activeScenario = 2;
+            updateScenarioBtnState(2, 'running');
+            
+            switchTab('discover');
+            await sleep(2000);
+            
+            document.getElementById('toast').style.display = 'block';
+            document.getElementById('toast').innerText = "⚡️ 任务开始：视频号私信";
+            
+            showValue("价值 1：公域转私域", "将视频号的<span class='value-highlight'>海量公域流量</span>，自动转化为<span class='value-highlight'>私域微信好友</span>。");
+            
+            // 1. 点击视频号
+            await autoClick('#entryChannels', "视频号入口");
+            
+            // 2. 进入消息页
+            showPage('pageChannelsMsg', 'navChannelsMsg');
+            document.getElementById('tabBar').style.display = 'none';
+            
+            // 3. 点击“打招呼消息”
+            showValue("价值 2：主动出击", "自动遍历私信和打招呼列表，<span class='value-highlight'>不放过任何一个</span>潜在咨询线索。");
+            await autoClick('#entryGreeting', "打招呼消息");
+            showPage('pageGreetingList', 'navGreetingList');
+            
+            // 4. 点击第一条未读
+            await autoClick('#msgItem1', "第一条客户消息");
+            
+            // 5. 进入聊天页
+            document.getElementById('chatTitle').innerText = "潜在客户A";
+            document.getElementById('chatContainer').innerHTML = `
+                <div class="message"><div class="bubble">你好，请问河西楼盘还有吗？</div></div>
+                <div style="font-size:12px;color:#ccc;text-align:center">14:17</div>
+            `;
+            showPage('pageChat', 'navChat');
+            
+            // 6. 自动回复
+            await sleep(2000);
+            showValue("价值 3：高效引流", "自动发送<span class='value-highlight'>微信号/二维码</span>，引导客户加微详聊，极大提升<span class='value-highlight'>加粉率</span>。");
+            const replyText = "你好，这里不方便及时回复。请加我微信 137xxxx 详聊，我把资料发给您。";
+            await autoInput('#chatInput', replyText, "引流话术");
+            await sleep(5000);
+            
+            const msgHtml = `<div class="message self"><div class="bubble">${replyText}</div></div>`;
+            document.getElementById('chatContainer').innerHTML += msgHtml;
+            document.getElementById('chatInput').innerText = "";
+            
+            document.getElementById('cursor').style.display = 'none';
+            document.getElementById('toast').innerText = "✅ 私信回复完成";
+            
+            await sleep(5000);
+            showLimitation("局限性 1：平台导流壁垒", "微信外部（如抖音、小红书）及视频号内部均对“导流私信”有严格限制。纯文字发送微信号或二维码极易被系统关键词屏蔽或禁言，直接通过文字沟通建联的成功率正在大幅下降。");
+            await sleep(5000);
+            showLimitation("局限性 2：双重风险与门槛", "“秒回”操作易触发行为风控，“插件”使用触发环境风控。此外，该功能同样仅适合处理海量咨询的头部账号，普通经纪人使用风险远大于收益。");
+            
+            setTimeout(() => document.getElementById('toast').style.display = 'none', 5000);
+            
+        } catch(e) {
+            if(e !== 'INTERRUPT') console.error(e);
+            else log('>> TASK STOPPED');
+        }
+    }
+
+    function manualClick(el) {
+        if(el.querySelector('.list-title') && el.querySelector('.list-title').innerText === '新的朋友') {
+            showPage('pageNewFriends', 'navNewFriends');
+        }
+    }
+    
+    function goBack(fromPage, fromNav) {
+        if(fromPage === 'pageNewFriends') {
+            showPage('pageContacts', 'navContacts');
+        }
+    }
+</script>
+
+</body>
+</html>
+

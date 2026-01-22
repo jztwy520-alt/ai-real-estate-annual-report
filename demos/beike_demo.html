@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>贝壳来客全链路演示</title>
+    <style>
+        :root {
+            /* Cyberpunk Theme Colors */
+            --cp-bg-dark: #050510;
+            --cp-panel-bg: rgba(10, 15, 30, 0.85);
+            --cp-cyan: #00f3ff;
+            --cp-pink: #bc13fe;
+            --cp-yellow: #f1c40f;
+            --cp-border: rgba(0, 243, 255, 0.3);
+            --cp-text-main: #e0e0e0;
+            --cp-text-dim: #8892b0;
+            
+            /* App Colors */
+            --bk-blue: #3072f6;
+            --bk-red: #e6454a; /* A+ App Red */
+            --wx-green: #07c160;
+            --wx-bg: #f2f2f2;
+            --sim-width: 375px;
+            --sim-height: 812px;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: var(--cp-bg-dark);
+            background-image: 
+                linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px),
+                radial-gradient(circle at 50% 50%, rgba(20, 30, 60, 1), #000);
+            background-size: 30px 30px, 30px 30px, 100% 100%;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: var(--cp-text-main);
+            overflow: hidden; /* Hide scrollbars for the main page */
+        }
+
+        /* Layout */
+        .layout {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            width: 100%;
+            height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-x: auto; /* Allow horizontal scroll if needed */
+        }
+
+        /* Control Panel */
+        .control-panel {
+            background: var(--cp-panel-bg);
+            padding: 20px;
+            width: 250px;
+            height: calc(100vh - 40px);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            border: 1px solid var(--cp-border);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.1), inset 0 0 30px rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            position: relative;
+            flex-shrink: 0;
+            z-index: 100;
+        }
+
+        /* Analysis Panel */
+        .analysis-panel {
+            background: var(--cp-panel-bg);
+            padding: 20px;
+            width: 250px;
+            height: calc(100vh - 40px);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            border: 1px solid var(--cp-border);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.1), inset 0 0 30px rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            position: relative;
+            flex-shrink: 0;
+            z-index: 100;
+        }
+
+        /* Phones Container */
+        .phones-container {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            height: 100%;
+            padding: 0 20px;
+        }
+
+        /* Phone Wrapper to hold label and phone */
+        .phone-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            transition: all 0.5s ease;
+        }
+
+        /* Phone Simulator */
+        .phone {
+            width: var(--sim-width); 
+            height: var(--sim-height); 
+            background: #000;
+            border-radius: 50px; 
+            padding: 12px;
+            box-shadow: 0 0 0 2px #333, 0 0 0 6px #1a1a1a, 0 0 40px rgba(0, 243, 255, 0.1);
+            position: relative; 
+            z-index: 10; 
+            border: 1px solid #333;
+            transform: scale(0.85); /* Scale down to fit 3 phones */
+            transform-origin: center top;
+            transition: box-shadow 0.5s ease, opacity 0.5s ease;
+            opacity: 0.6; /* Dim inactive phones */
+        }
+
+        .phone-wrapper.active .phone {
+            opacity: 1;
+            box-shadow: 0 0 0 2px #333, 0 0 0 6px #1a1a1a, 0 0 60px rgba(0, 243, 255, 0.4);
+            z-index: 20;
+        }
+
+        .phone-label {
+            margin-bottom: -40px; /* Adjust for scale */
+            z-index: 30;
+            color: var(--cp-cyan); 
+            font-family: 'Courier New', monospace; 
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase; 
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+            background: rgba(0,0,0,0.7);
+            padding: 5px 15px;
+            border-radius: 4px;
+            border: 1px solid var(--cp-cyan);
+            transform: translateY(-20px);
+        }
+
+        .notch {
+            position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+            width: 120px; height: 35px; background: black;
+            border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; z-index: 200;
+        }
+        .screen {
+            width: 100%; height: 100%; background: #fff; border-radius: 40px;
+            overflow: hidden; position: relative;
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+            transform: translateZ(0);
+        }
+
+        /* Status Bar */
+        .status-bar {
+            height: 44px; display: flex; justify-content: space-between; align-items: flex-end;
+            padding: 0 25px 8px 25px; font-size: 14px; font-weight: 600; color: #000;
+            z-index: 100; position: relative; background: transparent;
+        }
+        
+        /* Page Transitions */
+        .page {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: #fff; display: none; overflow-y: auto;
+            -ms-overflow-style: none; scrollbar-width: none;
+        }
+        .page::-webkit-scrollbar { display: none; }
+        .page.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Common Navbar */
+        .nav-bar {
+            height: 88px; display: flex; align-items: center; padding: 44px 15px 0 15px;
+            box-sizing: border-box;
+            font-size: 17px; font-weight: 600; position: relative; z-index: 90;
+            background: #fff; border-bottom: 1px solid #f0f0f0; color: #000;
+        }
+        .nav-left { position: absolute; left: 15px; bottom: 0; height: 44px; display: flex; align-items: center; }
+        .nav-center { flex: 1; text-align: center; }
+        .nav-right { position: absolute; right: 15px; bottom: 0; height: 44px; display: flex; gap: 15px; align-items: center; }
+        .back-icon {
+            width: 12px; height: 20px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 20'%3E%3Cpath fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M10.5 19.5L1.5 10.5 10.5 1.5'/%3E%3C/svg%3E") no-repeat center/contain;
+            margin-right: 5px;
+        }
+
+        /* Beike IM Styles */
+        .beike-top-card {
+            margin: 10px 15px; padding: 15px; background: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-radius: 8px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .bk-agent-info { display: flex; gap: 10px; align-items: center; }
+        .bk-avatar { width: 40px; height: 40px; border-radius: 50%; background: #ddd; background-size: cover; background-position: center; }
+        .bk-btn-add {
+            background: #fff8e8; color: #bfae88; padding: 6px 15px;
+            border-radius: 15px; font-size: 13px; font-weight: 500; border: none; cursor: pointer;
+        }
+        .chat-time { text-align: center; color: #ccc; font-size: 12px; margin: 20px 0; }
+        .bk-msg { display: flex; gap: 10px; margin: 10px 15px; align-items: flex-start; }
+        .bk-bubble {
+            background: #fff; padding: 12px 16px; border-radius: 8px; border-top-left-radius: 2px;
+            max-width: 70%; font-size: 16px; line-height: 1.5; color: #333;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .bk-img-bubble {
+            max-width: 45%; border-radius: 8px; overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .bk-img-bubble img { width: 100%; display: block; }
+        .bk-bottom-pills {
+            display: flex; gap: 10px; padding: 10px 15px; background: #f9f9f9;
+        }
+        .bk-pill {
+            background: #fff; padding: 6px 12px; border-radius: 15px;
+            font-size: 12px; color: #666; border: 1px solid #eee; display: flex; align-items: center; gap: 4px;
+        }
+        .bk-input-area {
+            background: #f9f9f9; border-top: 1px solid #eee;
+            display: flex; align-items: center; padding: 8px 10px 30px 10px; gap: 10px;
+            box-sizing: border-box;
+        }
+
+        /* WeChat Profile Styles */
+        .wx-profile-header {
+            background: #fff; padding: 25px 20px; display: flex; gap: 20px;
+            align-items: center;
+        }
+        .wx-big-avatar { width: 64px; height: 64px; border-radius: 6px; background: #ddd; background-size: cover; background-position: center; }
+        .wx-cell-group { margin-top: 8px; background: #fff; }
+        .wx-cell-title {
+            padding: 10px 20px 5px; font-size: 12px; color: #999;
+        }
+        .wx-cell {
+            padding: 16px 20px; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid #f5f5f5; font-size: 16px;
+        }
+        .wx-cell:last-child { border-bottom: none; }
+        .wx-cell-label { color: #000; width: 90px; }
+        .wx-cell-value { color: #666; flex: 1; text-align: right; display: flex; align-items: center; justify-content: flex-end; gap: 5px; }
+        .wx-video-thumbs { display: flex; gap: 5px; }
+        .wx-video-thumb { width: 30px; height: 30px; background: #ddd; border-radius: 2px; background-size: cover; }
+        .wx-icon-blue { color: #576b95; font-size: 14px; }
+        .wx-icon-verify { color: #fa9d3b; margin-left: 5px; }
+        .wx-btn-add {
+            margin: 20px; background: #fff; color: #576b95; font-weight: 600;
+            text-align: center; padding: 14px; border-radius: 8px; font-size: 17px;
+            cursor: pointer;
+        }
+        
+        /* WeChat Chat Styles */
+        .wx-sys-msg {
+            text-align: center; font-size: 12px; color: #999; margin: 15px 30px; line-height: 1.4;
+        }
+        .wx-sys-msg span { color: #576b95; cursor:pointer; }
+        .wx-link-card {
+            background: #fff; border-radius: 4px; padding: 15px; width: 240px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1); margin-bottom: 5px;
+        }
+        .wx-card-header { display: flex; align-items: center; gap: 5px; font-size: 12px; color: #999; margin-bottom: 10px; border-bottom: 1px solid #f5f5f5; padding-bottom: 8px; }
+        .wx-card-title { font-size: 16px; color: #000; margin-bottom: 10px; line-height: 1.4; }
+        .wx-card-banner {
+            height: 120px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            border-radius: 4px; display: flex; flex-direction: column; justify-content: center; align-items: center; color: #fff; text-align: center; padding: 10px;
+        }
+        .wx-bubble {
+            background: #fff; padding: 10px 14px; border-radius: 4px;
+            max-width: 75%; font-size: 16px; line-height: 1.5; color: #000;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.05); border: 1px solid #eee;
+        }
+
+        /* A+ App Styles */
+        .ap-header {
+            background: #fff; padding-top: 50px; padding-bottom: 10px; padding-left: 15px; padding-right: 15px;
+            display: flex; align-items: center; justify-content: space-between;
+            font-size: 18px; font-weight: 600; color: #000;
+        }
+        .ap-tabs { display: flex; gap: 20px; font-size: 16px; font-weight: bold; color: #333; }
+        .ap-tab-item.active { color: #e6454a; position: relative; }
+        .ap-tab-item.active::after {
+            content: ''; position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%);
+            width: 15px; height: 3px; background: #e6454a; border-radius: 2px;
+        }
+        .ap-filter { display: flex; justify-content: space-between; padding: 10px 15px; background: #fff; font-size: 14px; color: #333; border-bottom: 1px solid #f5f5f5; }
+        .ap-list-item {
+            background: #fff; padding: 15px; margin-bottom: 10px;
+        }
+        .ap-item-main { display: flex; gap: 12px; }
+        .ap-avatar-box { position: relative; width: 45px; height: 45px; }
+        .ap-avatar { width: 45px; height: 45px; border-radius: 4px; background: #eee; background-size: cover; background-position: center; }
+        .ap-item-content { flex: 1; }
+        .ap-name-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
+        .ap-name { font-size: 16px; font-weight: bold; color: #333; }
+        .ap-time { font-size: 12px; color: #999; }
+        .ap-tags { display: flex; gap: 5px; margin: 6px 0; }
+        .ap-tag { font-size: 11px; padding: 2px 6px; border-radius: 2px; background: #f7f8fa; color: #666; }
+        .ap-track-row { font-size: 12px; color: #666; margin-top: 8px; display: flex; align-items: center; gap: 5px; }
+        
+        .ap-bottom-bar {
+            position: absolute; bottom: 0; width: 100%; height: 50px; background: #fff; border-top: 1px solid #eee;
+            display: flex; justify-content: space-around; align-items: center; padding-bottom: 15px;
+        }
+        .ap-bar-item { display: flex; flex-direction: column; align-items: center; gap: 2px; color: #999; font-size: 10px; }
+        .ap-bar-item.active { color: #e6454a; }
+        .ap-bar-icon { font-size: 20px; }
+
+        /* A+ Detail Styles */
+        .ap-detail-tabs { display: flex; justify-content: space-around; background: #fff; padding: 10px 0; border-bottom: 1px solid #f5f5f5; font-size: 15px; }
+        .ap-detail-tab { color: #666; }
+        .ap-detail-tab.active { color: #e6454a; font-weight: bold; position: relative; }
+        .ap-detail-tab.active::after {
+            content: ''; position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%);
+            width: 20px; height: 3px; background: #e6454a; border-radius: 2px;
+        }
+        .ap-timeline { padding: 20px; background: #fff; height: calc(100% - 220px); overflow-y: auto; }
+        .tl-item { display: flex; gap: 15px; margin-bottom: 25px; position: relative; }
+        .tl-line { position: absolute; left: 6px; top: 15px; bottom: -30px; width: 1px; background: #eee; z-index: 1; }
+        .tl-item:last-child .tl-line { display: none; }
+        .tl-dot { width: 12px; height: 12px; border-radius: 50%; background: #ddd; z-index: 2; margin-top: 5px; }
+        .tl-dot.red { background: #e6454a; border: 2px solid #fff; box-shadow: 0 0 0 1px #e6454a; }
+        .tl-content { flex: 1; }
+        .tl-title { font-size: 15px; font-weight: bold; color: #333; margin-bottom: 4px; }
+        .tl-time { font-size: 12px; color: #999; margin-bottom: 8px; }
+        .tl-card { background: #f7f8fa; padding: 10px; border-radius: 4px; font-size: 13px; color: #666; display: flex; align-items: center; gap: 10px; }
+
+        .ap-detail-bottom {
+            position: absolute; bottom: 0; width: 100%; height: 60px; background: #fff; border-top: 1px solid #eee;
+            display: flex; align-items: center; padding: 0 15px; gap: 10px; padding-bottom: 15px; box-sizing: border-box;
+        }
+        .ap-action-icon { display: flex; flex-direction: column; align-items: center; font-size: 10px; color: #333; gap: 2px; margin-right: 10px; }
+        .ap-btn-big { flex: 1; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 4px; font-size: 16px; font-weight: bold; }
+        .ap-btn-white { border: 1px solid #ddd; background: #fff; color: #333; }
+        .ap-btn-red { background: #e6454a; color: #fff; border: none; }
+
+        
+        /* Automation Cursor */
+        .auto-cursor {
+            width: 30px; height: 30px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300f3ff' stroke-width='2'%3E%3Cpath d='M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z'/%3E%3C/svg%3E") no-repeat center/contain;
+            position: absolute; z-index: 9999; pointer-events: none;
+            transition: all 0.6s cubic-bezier(0.22, 0.61, 0.36, 1); display: none;
+            filter: drop-shadow(0 0 5px #00f3ff);
+        }
+        .click-effect {
+            position: absolute; width: 40px; height: 40px; border-radius: 50%;
+            background: rgba(0, 243, 255, 0.1); border: 2px solid #00f3ff;
+            transform: scale(0); animation: ripple 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none; z-index: 9998; box-shadow: 0 0 10px #00f3ff;
+        }
+        @keyframes ripple { to { transform: scale(2.5); opacity: 0; } }
+        
+        /* Toast */
+        .toast {
+            position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.8); color: #fff; padding: 15px 25px; border-radius: 8px;
+            z-index: 5000; text-align: center; display: none; animation: popIn 0.3s;
+        }
+        @keyframes popIn { from { transform: translate(-50%, -40%); opacity: 0; } to { transform: translate(-50%, -50%); opacity: 1; } }
+
+        /* Log & Buttons */
+        .btn {
+            display: flex; align-items: center; width: 100%; padding: 15px;
+            background: rgba(0, 243, 255, 0.05); color: var(--cp-text-main);
+            border: 1px solid rgba(0, 243, 255, 0.2); cursor: pointer;
+            transition: all 0.3s ease; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+        }
+        .btn:hover { background: rgba(0, 243, 255, 0.15); border-color: var(--cp-cyan); }
+        .btn-icon { font-size: 20px; margin-right: 10px; }
+        .btn-title { font-weight: bold; font-size: 14px; color: #fff; }
+        .btn-desc { font-size: 10px; color: var(--cp-text-dim); }
+        
+        #sysLog { font-family: 'Courier New', monospace; font-size: 12px; color: var(--cp-text-main); line-height: 1.4; }
+        .log-time { color: var(--cp-text-dim); margin-right: 5px; }
+        
+        .value-item { margin-bottom: 15px; padding-left: 10px; border-left: 2px solid var(--cp-yellow); animation: slideLeft 0.5s; }
+        @keyframes slideLeft { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .value-title { color: var(--cp-yellow); font-weight: bold; font-size: 13px; margin-bottom: 4px; }
+        .value-desc { color: #fff; font-size: 12px; line-height: 1.4; }
+
+        /* Floating Value Window */
+        .floating-value {
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 10, 20, 0.95);
+            border: 1px solid var(--cp-yellow);
+            border-left: 5px solid var(--cp-yellow);
+            padding: 15px 25px;
+            border-radius: 4px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8), 0 0 10px rgba(241, 196, 15, 0.3);
+            z-index: 9999;
+            width: 80%;
+            max-width: 400px;
+            display: none;
+            animation: floatDown 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none; /* Let clicks pass through */
+        }
+        @keyframes floatDown {
+            from { transform: translate(-50%, -20px); opacity: 0; }
+            to { transform: translate(-50%, 0); opacity: 1; }
+        }
+        .fv-title { color: var(--cp-yellow); font-size: 16px; font-weight: bold; margin-bottom: 8px; display:flex; align-items:center; gap:8px;}
+        .fv-desc { color: #fff; font-size: 14px; line-height: 1.5; }
+
+        @keyframes breathe {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        .breathing-icon {
+            display: inline-block;
+            margin-right: 8px;
+            animation: breathe 2s infinite ease-in-out;
+            color: var(--cp-cyan);
+            text-shadow: 0 0 5px var(--cp-cyan);
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="layout">
+    <!-- Control Panel -->
+    <div class="control-panel">
+        <div style="border-bottom: 1px solid var(--cp-border); padding-bottom: 15px;">
+            <h2 style="margin:0; color:var(--cp-cyan); font-family:'Courier New'; text-shadow:0 0 10px rgba(0,243,255,0.5); display: flex; align-items: center;">
+                <span class="breathing-icon">❖</span> 自动化控制台
+            </h2>
+        </div>
+        
+        <div style="display:flex; flex-direction:column; gap:15px;">
+            <!-- Step Controls -->
+            <div style="display:flex; gap:10px;">
+                <button class="btn" onclick="prevStep()" style="flex:1; padding:10px;">
+                    <div class="btn-title" style="text-align:center;">◀ PREV</div>
+                </button>
+                <button class="btn" onclick="nextStep()" style="flex:1; padding:10px;">
+                    <div class="btn-title" style="text-align:center;">NEXT ▶</div>
+                </button>
+            </div>
+            
+            <!-- Auto Play Toggle Button -->
+            <button id="btnAutoToggle" class="btn" onclick="toggleAutoPlay()">
+                <span class="btn-icon">🚀</span>
+                <div class="btn-content">
+                    <div class="btn-title">开始演示 (Auto)</div>
+                    <div class="btn-desc">FLOW: FULL_CYCLE</div>
+                </div>
+            </button>
+            
+            <button class="btn" style="border-color:#ff4757; color:#ff4757;" onclick="resetSystem()">
+                <span class="btn-icon">↺</span>
+                <div class="btn-content">
+                    <div class="btn-title">重置系统</div>
+                    <div class="btn-desc">SYSTEM_RESET</div>
+                </div>
+            </button>
+        </div>
+
+        <div style="flex:1; background:rgba(0,0,0,0.3); border:1px solid var(--cp-border); padding:10px; display:flex; flex-direction:column; overflow:hidden;">
+            <div style="color:var(--cp-text-dim); font-size:10px; margin-bottom:5px; border-bottom:1px dashed #333; padding-bottom:5px;">SYSTEM LOG</div>
+            <div id="sysLog" style="flex:1; overflow-y:auto;"></div>
+        </div>
+    </div>
+
+    <!-- Phones Container -->
+    <div class="phones-container">
+        <!-- Phone 1: Beike Platform -->
+        <div class="phone-wrapper" id="wrapper-beike">
+            <div class="phone-label">贝壳平台</div>
+            <div class="phone">
+                <div class="notch"></div>
+                <div class="auto-cursor" id="cursor-beike"></div>
+                <div class="toast" id="toast-beike"></div>
+                <div class="screen">
+                    <div class="status-bar"><span>16:29</span><span>5G 📶 🔋</span></div>
+                    
+                    <!-- Page: Beike IM -->
+                    <div class="page active" id="pageBeikeIM" style="background:#f5f5f5;">
+                        <div class="nav-bar">
+                            <div class="nav-left"><span class="back-icon"></span></div>
+                            <div class="nav-center">杨满<br><span style="font-size:10px; color:#666; font-weight:400;">服务:5年/评价:4.6</span></div>
+                            <div class="nav-right" style="color:#333;">📞 ···</div>
+                        </div>
+                        <div class="beike-top-card">
+                            <div class="bk-agent-info">
+                                <div class="bk-avatar" style="background-image:url('https://img.ljcdn.com/usercenter/images/uc_user_default_avatar.png.200x200.png');"></div>
+                                <div>
+                                    <div style="font-size:15px; font-weight:bold;">杨满 @链家</div>
+                                    <div style="font-size:11px; color:#e6454a; margin-top:2px;">加官方认证微信，免电话营销</div>
+                                </div>
+                            </div>
+                            <button class="bk-btn-add" id="btnAddWx">添加微信</button>
+                        </div>
+                        <div style="padding-bottom:120px; overflow-y:auto; height: calc(100% - 240px);">
+                            <div class="bk-msg">
+                                <div class="bk-avatar" style="width:36px; height:36px; background-image:url('https://img.ljcdn.com/usercenter/images/uc_user_default_avatar.png.200x200.png');"></div>
+                                <div class="bk-bubble">周边配套超级齐全，预约看房私信</div>
+                            </div>
+                            <div class="chat-time">09月04日 17:52:44</div>
+                            <div class="bk-msg">
+                                <div class="bk-avatar" style="width:36px; height:36px; background-image:url('https://img.ljcdn.com/usercenter/images/uc_user_default_avatar.png.200x200.png');"></div>
+                                <div class="bk-bubble">华润和贝壳的战略下午已经启动，华润开发的楼盘和我看房都有别人没有的惊喜，其中河西南115平准现房，376万，楼层任选，感兴趣回复我</div>
+                            </div>
+                            <div class="bk-msg">
+                                <div class="bk-avatar" style="width:36px; height:36px; background-image:url('https://img.ljcdn.com/usercenter/images/uc_user_default_avatar.png.200x200.png');"></div>
+                                <div class="bk-img-bubble">
+                                    <img src="https://image1.ljcdn.com/clue/2000/1000/ph/1000000010360673/60d85942-53b0-4f59-9955-468753268848.jpg.600x.jpg" alt="战略合作" style="min-height:100px; background:#eee;">
+                                </div>
+                            </div>
+                            <div class="chat-time">09月11日 21:13:05</div>
+                            <div class="bk-msg">
+                                <div class="bk-avatar" style="width:36px; height:36px; background-image:url('https://img.ljcdn.com/usercenter/images/uc_user_default_avatar.png.200x200.png');"></div>
+                                <div class="bk-bubble">河西南3.3新房，准现房，周末看看吗</div>
+                            </div>
+                        </div>
+                        <div style="position:absolute; bottom:0; width:100%;">
+                            <div class="bk-bottom-pills">
+                                <div class="bk-pill"><span style="color:#fa9d3b">⚡</span> 常用语</div>
+                                <div class="bk-pill"><span style="color:#fa9d3b">🖼</span> 相册</div>
+                                <div class="bk-pill"><span style="color:#3072f6">💬</span> 加好友</div>
+                            </div>
+                            <div class="bk-input-area">
+                                <div style="font-size:24px; color:#333;">㉆</div>
+                                <div style="flex:1; height:36px; background:#fff; border-radius:4px; border:none; box-shadow:0 0 2px rgba(0,0,0,0.1);"></div>
+                                <div style="font-size:24px; color:#333;">☺</div>
+                                <div style="font-size:24px; color:#333;">⊕</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phone 2: WeChat -->
+        <div class="phone-wrapper" id="wrapper-wechat">
+            <div class="phone-label">客户微信端</div>
+            <div class="phone">
+                <div class="notch"></div>
+                <div class="auto-cursor" id="cursor-wechat"></div>
+                <div class="toast" id="toast-wechat"></div>
+                <div class="screen">
+                    <div class="status-bar"><span>16:30</span><span>5G 📶 🔋</span></div>
+                    
+                    <!-- Page: WeChat Profile -->
+                    <div class="page active" id="pageWeChatProfile">
+                        <div class="nav-bar" style="background:#fff; border:none;">
+                            <div class="nav-left"><span class="back-icon"></span>贝壳找房</div>
+                            <div class="nav-right">···</div>
+                        </div>
+                        <div class="wx-profile-header">
+                            <div class="wx-big-avatar" style="background-image:url('https://img.ljcdn.com/usercenter/images/uc_user_default_avatar.png.200x200.png');"></div>
+                            <div style="flex:1;">
+                                <div style="font-size:22px; font-weight:bold; margin-bottom:5px; display:flex; align-items:center;">杨满 <span style="color:#576b95; font-size:16px; margin-left:5px;">👤</span></div>
+                                <div style="color:#bfae88; font-size:14px;">@贝壳平台新经纪品牌</div>
+                            </div>
+                        </div>
+                        
+                        <div class="wx-cell-group">
+                            <div class="wx-cell-title">朋友资料</div>
+                            <div class="wx-cell">
+                                <div class="wx-cell-label" style="width:auto; color:#000;">添加朋友的备注，并设置朋友权限。</div>
+                                <div class="wx-cell-value"></div>
+                                <div style="color:#ccc;">></div>
+                            </div>
+                        </div>
+
+                        <div class="wx-cell-group">
+                            <div class="wx-cell-title">企业信息</div>
+                            <div class="wx-cell">
+                                <div class="wx-cell-label">来自</div>
+                                <div class="wx-cell-value">企业微信 <span class="wx-icon-blue">☁</span></div>
+                                <div style="color:#ccc; margin-left:10px;">></div>
+                            </div>
+                            <div class="wx-cell">
+                                <div class="wx-cell-label">企业</div>
+                                <div class="wx-cell-value">贝壳平台新经纪品牌 <span class="wx-icon-verify">✔</span></div>
+                                <div style="color:#ccc; margin-left:10px;">></div>
+                            </div>
+                            <div class="wx-cell">
+                                <div class="wx-cell-label">视频号</div>
+                                <div class="wx-cell-value" style="justify-content:flex-start;">
+                                    <span style="margin-right:5px; color:#333; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:80px;">贝壳找房...</span>
+                                    <div class="wx-video-thumbs">
+                                        <div class="wx-video-thumb" style="background-image:url('https://img.ljcdn.com/usercenter/images/uc_user_default_avatar.png.200x200.png');"></div>
+                                        <div class="wx-video-thumb" style="background-image:url('https://img.ljcdn.com/usercenter/images/uc_user_default_avatar.png.200x200.png');"></div>
+                                        <div class="wx-video-thumb" style="background-image:url('https://img.ljcdn.com/usercenter/images/uc_user_default_avatar.png.200x200.png');"></div>
+                                    </div>
+                                </div>
+                                <div style="color:#ccc; margin-left:10px;">></div>
+                            </div>
+                            <div class="wx-cell">
+                                <div class="wx-cell-label">实名</div>
+                                <div class="wx-cell-value">杨满 <span class="wx-icon-blue">☑</span></div>
+                                <div style="color:#ccc; margin-left:10px;">></div>
+                            </div>
+                            <div class="wx-cell">
+                                <div class="wx-cell-label">职务</div>
+                                <div class="wx-cell-value" style="color:#000;">南京贝壳新房高级经纪人</div>
+                            </div>
+                            <div class="wx-cell">
+                                <div class="wx-cell-label">电话</div>
+                                <div class="wx-cell-value" style="color:#576b95;">19951780333</div>
+                            </div>
+                            <div class="wx-cell">
+                                <div class="wx-cell-label">邮箱</div>
+                                <div class="wx-cell-value" style="color:#576b95; font-size:12px;">yangman007@lianjia.com</div>
+                            </div>
+                            <div class="wx-cell">
+                                <div class="wx-cell-label">品牌名称</div>
+                                <div class="wx-cell-value" style="color:#000;">链家</div>
+                            </div>
+                        </div>
+
+                        <div class="wx-btn-add" id="btnAddFriend">添加到通讯录</div>
+                    </div>
+
+                    <!-- Page: WeChat Chat -->
+                    <div class="page" id="pageWeChatChat" style="background:#f5f5f5;">
+                        <div class="nav-bar" style="background:#ededed; border-bottom:1px solid #dcdcdc;">
+                            <div class="nav-left"><div class="back-icon" onclick="showPage('wechat', 'pageWeChatProfile')"></div>微信(60)</div>
+                            <div class="nav-center">杨满</div>
+                            <div class="nav-right" style="font-size:20px;">···</div>
+                        </div>
+                        <div style="padding:15px; background:#f2f2f2; height:calc(100% - 100px); overflow-y:auto; box-sizing:border-box;">
+                            <div class="wx-sys-msg">
+                                杨满刚刚把你添加到通讯录，现在可以开始聊天了。<br>
+                                为保障你的合法权益与服务质量，本会话内容将可能被对方所在的企业存档，若不同意可拒绝存档。<span onclick="alert('查看')">查看服务须知</span>
+                            </div>
+                            
+                            <!-- Agent Avatar & Card -->
+                            <div class="bk-msg">
+                                <div class="bk-avatar" style="background-image:url('https://img.ljcdn.com/usercenter/images/uc_user_default_avatar.png.200x200.png');"></div>
+                                <div>
+                                     <div class="wx-link-card">
+                                        <div class="wx-card-header">
+                                            <div style="width:16px; height:16px; background:#3072f6; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-size:10px;">贝</div>
+                                            贝壳找房 | 二手房新房租房装修
+                                        </div>
+                                        <div class="wx-card-title">官方认证，为您提供服务保障！[贝壳找房]</div>
+                                        <div class="wx-card-banner">
+                                            <div style="font-size:18px; font-weight:bold;">官方认证企微</div>
+                                            <div style="font-size:16px; margin-top:5px;">守护您的购房交易</div>
+                                            <div style="font-size:10px; opacity:0.8; margin-top:5px;">真实房源 | 安全交易 | 安心入住</div>
+                                            <button style="margin-top:10px; background:#fff; color:#3072f6; border:none; padding:4px 10px; border-radius:15px; font-size:12px;">查看我的保障 ▶</button>
+                                        </div>
+                                        <div style="font-size:10px; color:#999; margin-top:8px;">🔗 小程序</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Dynamic Content Area -->
+                            <div id="wxChatContent"></div>
+                        </div>
+                        
+                        <!-- Input Bar -->
+                        <div class="bk-input-area" style="position:absolute; bottom:0; width:100%; background:#f7f7f7;">
+                            <div style="font-size:24px; color:#333;">🔊</div>
+                            <div style="flex:1; height:36px; background:#fff; border-radius:4px;"></div>
+                            <div style="font-size:24px; color:#333;">☺</div>
+                            <div style="font-size:24px; color:#333;">⊕</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phone 3: Beike A+ -->
+        <div class="phone-wrapper" id="wrapper-aplus">
+            <div class="phone-label">贝壳A+系统</div>
+            <div class="phone">
+                <div class="notch"></div>
+                <div class="auto-cursor" id="cursor-aplus"></div>
+                <div class="toast" id="toast-aplus"></div>
+                <div class="screen">
+                    <div class="status-bar"><span>10:48</span><span>5G 📶 🔋</span></div>
+                    
+                    <!-- Page: A+ List -->
+                    <div class="page active" id="pageAPlusList">
+                        <!-- Search Bar -->
+                        <div style="padding:10px 15px; background:#fff; display:flex; gap:10px; align-items:center; padding-top:48px;">
+                            <div style="font-size:20px;">🔍</div>
+                            <div style="flex:1; display:flex; justify-content:space-around; font-size:16px; color:#333; font-weight:bold;">
+                                <div style="color:#999;">概览</div>
+                                <div style="color:#e6454a; position:relative;">客源<div style="position:absolute; bottom:-8px; left:50%; transform:translateX(-50%); width:15px; height:3px; background:#e6454a; border-radius:2px;"></div></div>
+                                <div style="color:#999;">获客</div>
+                            </div>
+                            <div style="font-size:24px;">+</div>
+                        </div>
+
+                        <!-- Sub Tabs -->
+                        <div style="display:flex; justify-content:space-around; padding:10px 0; background:#fff; font-size:14px; border-bottom:1px solid #f5f5f5;">
+                            <div style="color:#e6454a; font-weight:bold;">私客池</div>
+                            <div>合作客</div>
+                            <div>共享池</div>
+                            <div>无效池</div>
+                        </div>
+
+                        <!-- Filter Bar -->
+                        <div class="ap-filter">
+                            <div>客户... ▾</div>
+                            <div>需求 ▾</div>
+                            <div style="color:#e6454a;">未成交 ▾</div>
+                            <div>更多 ▾</div>
+                            <div>排序 ▾</div>
+                        </div>
+
+                        <!-- List Content -->
+                        <div id="apListContent" style="background:#f5f5f5; height:calc(100% - 190px); overflow-y:auto; padding-top:10px;">
+                            <!-- Specific Card -->
+                            <div class="ap-list-item" onclick="showPage('aplus', 'pageAPlusDetail')">
+                                <div class="ap-item-main">
+                                    <div class="ap-avatar-box">
+                                        <div class="ap-avatar" style="background-image:url('https://img.ljcdn.com/usercenter/images/uc_user_default_avatar.png.200x200.png');"></div>
+                                    </div>
+                                    <div class="ap-item-content">
+                                        <div class="ap-name-row">
+                                            <div class="ap-name">江心洲1楼带院子</div>
+                                            <div style="display:flex; gap:2px;">
+                                                 <div style="font-size:14px; color:#ddd;">★</div>
+                                                 <div style="font-size:14px; color:#ddd;">★</div>
+                                            </div>
+                                        </div>
+                                        <div class="ap-time">录客时间: 2025-04-07</div>
+                                        <div class="ap-tags">
+                                            <div class="ap-tag">已加微信</div>
+                                        </div>
+                                        
+                                        <div style="margin-top:8px; display:flex; justify-content:space-between; align-items:center;">
+                                            <div style="font-weight:bold; font-size:15px;">新房</div>
+                                            <div style="font-size:20px; font-weight:bold;">-</div>
+                                            <div style="font-size:20px; font-weight:bold;">-</div>
+                                        </div>
+                                        <div style="display:flex; justify-content:space-between; font-size:12px; color:#999; margin-top:2px;">
+                                            <div>需求类型</div>
+                                            <div>客源分</div>
+                                            <div>线上活跃</div>
+                                        </div>
+
+                                        <div class="ap-track-row">
+                                            客源轨迹: 今日 | 客源录入
+                                        </div>
+                                        <div class="ap-track-row">
+                                            最近跟进: 暂无跟进信息
+                                        </div>
+                                        <div class="ap-track-row">
+                                            最近维护: 24小时内
+                                        </div>
+                                    </div>
+                                    <div style="color:#3072f6; font-size:20px;">🎧</div>
+                                </div>
+                                
+                                <div style="display:flex; gap:10px; margin-top:15px;">
+                                    <button style="flex:1; background:#fff; border:1px solid #ddd; padding:8px 0; border-radius:4px; font-size:14px;">更多</button>
+                                    <button style="flex:1; background:#fff; border:1px solid #ddd; padding:8px 0; border-radius:4px; font-size:14px;">重点关注</button>
+                                    <button style="flex:1; background:#fff; border:1px solid #ddd; padding:8px 0; border-radius:4px; font-size:14px;">写跟进</button>
+                                    <button style="flex:1; background:#e6454a; color:#fff; border:none; padding:8px 0; border-radius:4px; font-size:14px;">补充电话</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Placeholder for dynamic items -->
+                            <div class="ap-list-item">
+                                <div class="ap-item-main">
+                                    <div class="ap-avatar-box">
+                                        <div class="ap-avatar" style="background-color:#ffeeba;"></div>
+                                    </div>
+                                    <div class="ap-item-content">
+                                        <div class="ap-name-row">
+                                            <div class="ap-name">唐仁 恒绿洲新岛江风</div>
+                                            <div style="color:#f1c40f;">★★</div>
+                                        </div>
+                                        <div class="ap-time">录客时间: 2024-07-27</div>
+                                    </div>
+                                    <div style="font-size:20px;">🔲</div>
+                                </div>
+                                <div style="display:flex; justify-content:space-between; margin-top:5px; padding-left:57px;">
+                                    <div style="font-size:14px; font-weight:bold;">二手/新房</div>
+                                    <div style="font-size:14px; font-weight:bold;">6.1</div>
+                                    <div style="font-size:14px; font-weight:bold;">今日</div>
+                                </div>
+                                <div class="ap-track-row">
+                                    <span>客源轨迹:</span>
+                                    <span style="color:#666;">150天前|浏览仁恒绿洲新岛江枫园/3室...</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bottom Bar -->
+                        <div class="ap-bottom-bar">
+                            <div class="ap-bar-item">
+                                <div class="ap-bar-icon">🏠</div>首页
+                            </div>
+                            <div class="ap-bar-item">
+                                <div class="ap-bar-icon">🏢</div>房源
+                            </div>
+                            <div class="ap-bar-item active">
+                                <div class="ap-bar-icon">👥</div>客源
+                            </div>
+                            <div class="ap-bar-item">
+                                <div class="ap-bar-icon">💬</div>消息
+                            </div>
+                            <div class="ap-bar-item">
+                                <div class="ap-bar-icon">👤</div>我的
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Page: A+ Detail -->
+                    <div class="page" id="pageAPlusDetail">
+                        <div class="nav-bar">
+                            <div class="nav-left" onclick="showPage('aplus', 'pageAPlusList')"><div class="back-icon"></div></div>
+                            <div class="nav-center">客源详情</div>
+                            <div class="nav-right" onclick="showPage('aplus', 'pageAPlusList')">✕</div>
+                        </div>
+                        
+                        <div class="ap-detail-tabs">
+                            <div class="ap-detail-tab">需求</div>
+                            <div class="ap-detail-tab">解读</div>
+                            <div class="ap-detail-tab active">轨迹<span style="background:#e6454a; color:#fff; border-radius:50%; padding:0 4px; font-size:10px; margin-left:2px; vertical-align:top;">7</span></div>
+                            <div class="ap-detail-tab">维护</div>
+                            <div class="ap-detail-tab">角色</div>
+                        </div>
+                        
+                        <div style="display:flex; gap:10px; padding:10px 15px; background:#fff; border-bottom:1px solid #f5f5f5;">
+                            <div style="background:#ffecec; color:#e6454a; padding:4px 10px; border-radius:4px; font-size:12px;">商机信息</div>
+                            <div style="background:#f5f5f5; color:#666; padding:4px 10px; border-radius:4px; font-size:12px;">房源调价/成交</div>
+                            <div style="background:#f5f5f5; color:#666; padding:4px 10px; border-radius:4px; font-size:12px;">浏览物料<span style="background:#e6454a; color:#fff; border-radius:50%; padding:0 4px; font-size:10px; margin-left:2px;">7</span></div>
+                        </div>
+
+                        <div class="ap-timeline">
+                            <div class="tl-item">
+                                <div class="tl-line"></div>
+                                <div class="tl-dot"></div>
+                                <div class="tl-content">
+                                    <div class="tl-title">客源录入：企微好友导入</div>
+                                    <div class="tl-time">2025.04.07 16:19</div>
+                                </div>
+                            </div>
+                            
+                            <div class="tl-item">
+                                <div class="tl-line"></div>
+                                <div class="tl-dot"></div>
+                                <div class="tl-content">
+                                    <div class="tl-title">企微加私商机：名片分享</div>
+                                    <div class="tl-time">2025.04.07 16:19</div>
+                                    <div class="tl-card">
+                                        <img src="https://img.ljcdn.com/usercenter/images/uc_user_default_avatar.png.200x200.png" style="width:30px; height:30px; border-radius:50%;">
+                                        <div>客户：江心洲1楼带院子 <span style="color:#07c160;">@微信</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div style="text-align:center; color:#999; font-size:12px; margin-top:20px;">没有更多了</div>
+                        </div>
+
+                        <div class="ap-detail-bottom">
+                            <div class="ap-action-icon">
+                                <div style="font-size:18px;">...</div>更多
+                            </div>
+                            <button class="ap-btn-big ap-btn-white">去选房</button>
+                            <button class="ap-btn-big ap-btn-white">写跟进</button>
+                            <button class="ap-btn-big ap-btn-red">📞 补全电话</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Analysis Panel -->
+    <div class="analysis-panel">
+        <div style="border-bottom: 1px solid var(--cp-border); padding-bottom: 15px;">
+            <h2 style="margin:0; color:var(--cp-yellow); font-family:'Courier New'; text-shadow:0 0 10px rgba(241,196,15,0.5);">价值分析</h2>
+        </div>
+        <div id="valueContent" style="flex:1; overflow-y:auto;">
+             <div style="color:var(--cp-text-dim); font-size:12px;">Waiting for analysis...</div>
+        </div>
+    </div>
+</div>
+
+    <!-- Floating Value Window -->
+    <div id="floatingValue" class="floating-value">
+        <div class="fv-title"><span style="font-size:20px;">★</span> <span id="fvTitle">Title</span></div>
+        <div class="fv-desc" id="fvDesc">Description content...</div>
+    </div>
+
+<script>
+    const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+    
+    function log(msg) {
+        const div = document.getElementById('sysLog');
+        const time = new Date().toLocaleTimeString('en-US', {hour12:false});
+        div.innerHTML += `<div style="margin-bottom:5px;"><span class="log-time">[${time}]</span>${msg}</div>`;
+        div.scrollTop = div.scrollHeight;
+    }
+
+    // Enhanced addValue with Floating Window
+    function addValue(title, desc) {
+        const div = document.getElementById('valueContent');
+        if (div.innerText.includes('Waiting')) div.innerHTML = '';
+        div.innerHTML += `
+            <div class="value-item">
+                <div class="value-title">${title}</div>
+                <div class="value-desc">${desc}</div>
+            </div>
+        `;
+        div.scrollTop = div.scrollHeight;
+
+        // Floating Window Logic
+        const fw = document.getElementById('floatingValue');
+        document.getElementById('fvTitle').innerText = title;
+        document.getElementById('fvDesc').innerText = desc;
+        fw.style.display = 'block';
+        
+        // Optional: Auto-hide after some time? 
+        // User requested "display as a floating window", implies persistence during the step.
+    }
+
+    function showToast(phoneId, msg) {
+        const toast = document.getElementById('toast-' + phoneId);
+        toast.innerText = msg;
+        toast.style.display = 'block';
+        setTimeout(() => toast.style.display = 'none', 2000);
+    }
+
+    function setActivePhone(wrapperId) {
+        document.querySelectorAll('.phone-wrapper').forEach(p => p.classList.remove('active'));
+        document.getElementById(wrapperId).classList.add('active');
+    }
+
+    function showPage(phoneId, pageId) {
+        const phone = document.querySelector(`#wrapper-${phoneId} .phone`);
+        phone.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        phone.querySelector('#' + pageId).classList.add('active');
+    }
+
+    async function autoClick(phoneId, selector, desc) {
+        const phone = document.querySelector(`#wrapper-${phoneId} .phone`);
+        const el = phone.querySelector(selector);
+        if(!el) {
+            log(`WARN: Element ${selector} not found, skipping click.`);
+            return;
+        }
+        
+        const rect = el.getBoundingClientRect();
+        const phoneRect = phone.getBoundingClientRect();
+        
+        const x = rect.left - phoneRect.left + rect.width / 2;
+        const y = rect.top - phoneRect.top + rect.height / 2;
+        
+        const cursor = document.getElementById('cursor-' + phoneId);
+        cursor.style.display = 'block';
+        cursor.style.left = `${x}px`;
+        cursor.style.top = `${y}px`;
+        
+        log(`ACTION: Move to [${desc}]`);
+        await sleep(600); // Slightly faster
+        
+        const ripple = document.createElement('div');
+        ripple.className = 'click-effect';
+        ripple.style.left = `${x - 20}px`;
+        ripple.style.top = `${y - 20}px`;
+        phone.appendChild(ripple);
+        
+        log(`ACTION: Click [${desc}]`);
+        setTimeout(() => ripple.remove(), 1000);
+        await sleep(300);
+        cursor.style.display = 'none';
+    }
+
+    // --- STEP MANAGEMENT ---
+    let currentStepIndex = -1;
+    
+    const steps = [
+        {
+            name: "初始化",
+            action: async () => {
+                resetUI();
+                log('Ready. Click NEXT to start.');
+            }
+        },
+        {
+            name: "触点曝光",
+            action: async () => {
+                setActivePhone('wrapper-beike');
+                showPage('beike', 'pageBeikeIM');
+                addValue('触点曝光', '用户在贝壳App浏览房源或咨询时，IM界面强引导展示经纪人企业微信名片。');
+            }
+        },
+        {
+            name: "点击添加微信",
+            action: async () => {
+                setActivePhone('wrapper-beike');
+                await autoClick('beike', '#btnAddWx', '添加微信按钮');
+                showToast('beike', '正在跳转微信...');
+                await sleep(1000);
+            }
+        },
+        {
+            name: "无缝连接",
+            action: async () => {
+                setActivePhone('wrapper-wechat');
+                showPage('wechat', 'pageWeChatProfile');
+                log('SWITCH: To WeChat App');
+                addValue('无缝连接', '一键唤起用户微信进入经纪人企微主页，缩短用户转化路径。');
+            }
+        },
+        {
+            name: "发送好友申请",
+            action: async () => {
+                setActivePhone('wrapper-wechat');
+                await autoClick('wechat', '#btnAddFriend', '添加到通讯录');
+                showToast('wechat', '已发送申请');
+                await sleep(1000);
+            }
+        },
+        {
+            name: "自动通过",
+            action: async () => {
+                setActivePhone('wrapper-wechat');
+                showPage('wechat', 'pageWeChatChat');
+                log('EVENT: Friend Request Auto-Accepted');
+                addValue('自动通过', '经纪人侧配置自动通过好友请求，无需人工干预，实现0延时响应。');
+            }
+        },
+        {
+            name: "发送标准SOP",
+            action: async () => {
+                setActivePhone('wrapper-wechat');
+                const chatContent = document.getElementById('wxChatContent');
+                chatContent.innerHTML = `
+                    <div class="bk-msg">
+                        <div class="bk-avatar" style="background-image:url('https://img.ljcdn.com/usercenter/images/uc_user_default_avatar.png.200x200.png');"></div>
+                        <div class="wx-bubble">
+                            您好，我是链家的经纪人杨满，我的手机号码是19951780333。从业房地产多年，真诚热情专业，服务态度好，服务承诺有保证，让我用专业的房地产知识为你提供高效便捷的购房方案。
+                        </div>
+                    </div>
+                `;
+                log('MSG: Auto Greeting Sent');
+                addValue('标准SOP', '自动发送标准化欢迎语与服务承诺，建立专业第一印象。');
+            }
+        },
+        {
+            name: "私客池归属",
+            action: async () => {
+                setActivePhone('wrapper-aplus');
+                showPage('aplus', 'pageAPlusList');
+                log('SWITCH: To Beike A+ System');
+                addValue('私客池归属', '用户添加企微后，自动沉淀为经纪人私客池客户，可新房报备，二手房带看，无需号码即可明确权益归属。');
+            }
+        },
+        {
+            name: "新客入池",
+            action: async () => {
+                setActivePhone('wrapper-aplus');
+                // Check if already added
+                if(!document.querySelector('.new-item')) {
+                    const listContent = document.getElementById('apListContent');
+                    const newItem = document.createElement('div');
+                    newItem.className = 'ap-list-item new-item';
+                    newItem.style.animation = 'slideIn 0.5s ease-out';
+                    newItem.onclick = () => showPage('aplus', 'pageAPlusDetail');
+                    newItem.innerHTML = `
+                        <div class="ap-item-main">
+                            <div class="ap-avatar-box">
+                                <div class="ap-avatar" style="background-image:url('https://img.ljcdn.com/usercenter/images/uc_user_default_avatar.png.200x200.png');"></div>
+                            </div>
+                            <div class="ap-item-content">
+                                <div class="ap-name-row">
+                                    <div class="ap-name">新添加客户 (刚刚)</div>
+                                    <div style="display:flex; gap:2px;">
+                                         <div style="font-size:14px; color:#ddd;">★</div>
+                                         <div style="font-size:14px; color:#ddd;">★</div>
+                                    </div>
+                                </div>
+                                <div class="ap-time">录客时间: 刚刚</div>
+                                <div class="ap-tags">
+                                    <div class="ap-tag">已加微信</div>
+                                    <div class="ap-tag" style="background:#e6f7ff; color:#1890ff;">新客</div>
+                                </div>
+                                
+                                <div style="margin-top:8px; display:flex; justify-content:space-between; align-items:center;">
+                                    <div style="font-weight:bold; font-size:15px;">新房</div>
+                                    <div style="font-size:20px; font-weight:bold;">-</div>
+                                    <div style="font-size:20px; font-weight:bold;">-</div>
+                                </div>
+                                <div style="display:flex; justify-content:space-between; font-size:12px; color:#999; margin-top:2px;">
+                                    <div>需求类型</div>
+                                    <div>客源分</div>
+                                    <div>线上活跃</div>
+                                </div>
+
+                                <div class="ap-track-row">
+                                    客源轨迹: 刚刚 | 客源录入
+                                </div>
+                                <div class="ap-track-row">
+                                    最近跟进: 暂无跟进信息
+                                </div>
+                                <div class="ap-track-row">
+                                    最近维护: 刚刚
+                                </div>
+                            </div>
+                            <div style="color:#3072f6; font-size:20px;">🎧</div>
+                        </div>
+                        <div style="display:flex; gap:10px; margin-top:15px;">
+                            <button style="flex:1; background:#fff; border:1px solid #ddd; padding:8px 0; border-radius:4px; font-size:14px;">更多</button>
+                            <button style="flex:1; background:#fff; border:1px solid #ddd; padding:8px 0; border-radius:4px; font-size:14px;">重点关注</button>
+                            <button style="flex:1; background:#fff; border:1px solid #ddd; padding:8px 0; border-radius:4px; font-size:14px;">写跟进</button>
+                            <button style="flex:1; background:#e6454a; color:#fff; border:none; padding:8px 0; border-radius:4px; font-size:14px;">补充电话</button>
+                        </div>
+                    `;
+                    listContent.insertBefore(newItem, listContent.firstChild);
+                }
+                
+                await autoClick('aplus', '.new-item', '新录入客源卡片');
+            }
+        },
+        {
+            name: "精准溯源",
+            action: async () => {
+                setActivePhone('wrapper-aplus');
+                showPage('aplus', 'pageAPlusDetail');
+                log('VIEW: Customer Detail');
+                addValue('精准溯源', '客源详情页自动记录来源渠道（企微好友导入），支持后续精细化运营。');
+                
+                const timeline = document.querySelector('.ap-timeline');
+                timeline.scrollTop = 0; 
+                const firstTl = timeline.querySelector('.tl-item');
+                if(firstTl) {
+                     firstTl.style.background = 'rgba(230, 69, 74, 0.1)';
+                     setTimeout(() => firstTl.style.background = 'transparent', 2000);
+                }
+                log('DEMO COMPLETE');
+            }
+        }
+    ];
+
+    let isRunning = false;
+    let isAutoPlaying = false;
+
+    function updateAutoPlayButton() {
+        const btn = document.getElementById('btnAutoToggle');
+        if(!btn) return;
+        
+        if(isAutoPlaying) {
+            btn.innerHTML = `
+                <span class="btn-icon">⏸</span>
+                <div class="btn-content">
+                    <div class="btn-title">暂停演示 (Pause)</div>
+                    <div class="btn-desc">CLICK TO PAUSE</div>
+                </div>
+            `;
+            btn.style.background = 'rgba(241, 196, 15, 0.1)';
+            btn.style.borderColor = 'var(--cp-yellow)';
+        } else {
+            btn.innerHTML = `
+                <span class="btn-icon">🚀</span>
+                <div class="btn-content">
+                    <div class="btn-title">开始演示 (Auto)</div>
+                    <div class="btn-desc">FLOW: FULL_CYCLE</div>
+                </div>
+            `;
+            btn.style.background = '';
+            btn.style.borderColor = '';
+        }
+    }
+
+    function toggleAutoPlay() {
+        if(isAutoPlaying) {
+            pauseAutoPlay();
+        } else {
+            startFullDemo();
+        }
+    }
+
+    function pauseAutoPlay() {
+        if(isAutoPlaying) {
+            isAutoPlaying = false;
+            updateAutoPlayButton();
+            log('AUTO: Paused by user. Click Auto to resume.');
+        }
+    }
+    
+    function stopAutoPlay() {
+        if(isAutoPlaying) {
+            isAutoPlaying = false;
+            updateAutoPlayButton();
+            log('AUTO: Stopped by manual interaction.');
+        }
+    }
+    
+    async function nextStep(fromAuto = false) {
+        if(!fromAuto) stopAutoPlay();
+        if(isRunning) return;
+        if(currentStepIndex >= steps.length - 1) {
+            log('END: Demo Completed.');
+            return;
+        }
+        
+        isRunning = true;
+        try {
+            currentStepIndex++;
+            const step = steps[currentStepIndex];
+            log(`>>> STEP ${currentStepIndex+1}/${steps.length}: ${step.name}`);
+            
+            // Hide previous floating value before starting new step
+            document.getElementById('floatingValue').style.display = 'none';
+            
+            await step.action();
+        } catch (e) {
+            log(`ERROR: ${e.message}`);
+            console.error(e);
+        } finally {
+            isRunning = false;
+        }
+    }
+
+    async function prevStep() {
+        stopAutoPlay();
+        if(isRunning) return;
+        if(currentStepIndex <= 0) {
+            resetSystem();
+            return;
+        }
+        
+        isRunning = true;
+        try {
+            currentStepIndex--;
+            log(`<<< BACK TO STEP ${currentStepIndex+1}/${steps.length}`);
+            
+            const targetIndex = currentStepIndex;
+            resetUI(); // Clear UI only
+            
+            // Fast Replay
+            for(let i=0; i<=targetIndex; i++) {
+                // Hide floating values during replay until the last one
+                await steps[i].action();
+                if(i < targetIndex) {
+                     document.getElementById('floatingValue').style.display = 'none';
+                }
+            }
+            currentStepIndex = targetIndex;
+        } catch (e) {
+            log(`ERROR: ${e.message}`);
+            console.error(e);
+        } finally {
+            isRunning = false;
+        }
+    }
+
+    function resetUI() {
+        // Don't reset currentStepIndex here to avoid logic conflicts in steps
+        
+        // Reset Pages
+        showPage('beike', 'pageBeikeIM');
+        showPage('wechat', 'pageWeChatProfile');
+        showPage('aplus', 'pageAPlusList');
+        
+        // Reset Chat Content
+        document.getElementById('wxChatContent').innerHTML = '';
+
+        // Reset A+ List (remove new item)
+        const newItem = document.querySelector('.new-item');
+        if(newItem) newItem.remove();
+
+        // Reset Logs & Panels
+        document.getElementById('sysLog').innerHTML = '';
+        document.getElementById('valueContent').innerHTML = '<div style="color:var(--cp-text-dim); font-size:12px;">Waiting for analysis...</div>';
+        document.getElementById('floatingValue').style.display = 'none';
+        
+        // Reset Active Phone
+        document.querySelectorAll('.phone-wrapper').forEach(p => p.classList.remove('active'));
+        document.getElementById('wrapper-beike').classList.add('active');
+        
+        log('System UI Reset.');
+    }
+
+    function resetSystem() {
+        stopAutoPlay();
+        currentStepIndex = -1;
+        resetUI();
+        log('System Reset. Ready.');
+    }
+
+    // Auto Play (Sequence of Next Steps)
+    async function startFullDemo() {
+        if(isRunning) return;
+        
+        // If we are already auto playing, do nothing
+        if(isAutoPlaying) return;
+
+        // If we are at the end, reset. 
+        // If currentStepIndex is -1 (start) or >= length-1 (end), reset.
+        // Otherwise, we assume we are resuming from a pause.
+        if(currentStepIndex < 0 || currentStepIndex >= steps.length - 1) {
+            resetSystem();
+            log('AUTO: Started (Slow Mode)...');
+        } else {
+            log('AUTO: Resuming...');
+        }
+        
+        isAutoPlaying = true;
+        updateAutoPlayButton();
+        
+        // Just run all steps with delays
+        // Loop as long as we are auto playing and haven't reached the end
+        while(isAutoPlaying && currentStepIndex < steps.length - 1) {
+            await nextStep(true);
+            // Wait for user to read before auto-next
+            // Extended time for value analysis popup
+            if(isAutoPlaying) await sleep(3000); 
+        }
+        
+        if(isAutoPlaying) {
+            log('AUTO: Full Cycle Completed.');
+            isAutoPlaying = false;
+            updateAutoPlayButton();
+        }
+    }
+</script>
+</body>
+</html>
