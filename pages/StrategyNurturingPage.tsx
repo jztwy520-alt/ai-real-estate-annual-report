@@ -149,7 +149,7 @@ const StrategyNurturingPage: React.FC = () => {
                 <div>
                    <h4 className="text-base font-bold text-slate-800 mb-2">无需订阅，自动挖掘：学区房需求捕获</h4>
                    <p className="text-sm text-slate-600 leading-relaxed mb-3">
-                     系统通过分析用户浏览行为与历史对话记忆，自动识别出“学区”隐性需求。结合最新政策，生成针对性解读文章主动推送，引导留资。
+                     系统通过自主分析用户浏览行为与历史对话记忆，自动识别出“学区”隐性需求。结合最新相关政策，生成针对性解读内容主动推送，引导开口、挖掘需求。
                    </p>
                    <div className="flex gap-2">
                       <span className="px-2 py-1 bg-cyan-50 text-cyan-600 text-xs font-bold rounded-lg border border-cyan-100">1人1策</span>

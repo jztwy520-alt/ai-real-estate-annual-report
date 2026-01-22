@@ -152,7 +152,7 @@ const StrategyMatchingPage: React.FC = () => {
            <div className="flex-1 space-y-3">
               <div className="p-3 bg-white rounded-xl border border-slate-200 shadow-sm">
                  <div className="text-xs font-bold text-indigo-500 uppercase mb-2 flex items-center gap-2">
-                    <i className="fas fa-comment-alt"></i> 话术建议 (Scripts)
+                    <i className="fas fa-comment-alt"></i> 话术建议 
                  </div>
                  <div className="p-2 bg-indigo-50 rounded-lg border border-indigo-100 text-xs text-slate-600 font-medium mb-2">
                     <p className="italic">"您关注的[XX小区]近期成交了一套同户型..."</p>
@@ -164,20 +164,20 @@ const StrategyMatchingPage: React.FC = () => {
 
               <div className="p-3 bg-white rounded-xl border border-slate-200 shadow-sm">
                  <div className="text-xs font-bold text-orange-500 uppercase mb-2 flex items-center gap-2">
-                    <i className="fas fa-home"></i> 配房建议 (Matching)
+                    <i className="fas fa-home"></i> 配房建议 
                  </div>
                  <div className="flex gap-2">
-                    <span className="px-2 py-1 bg-orange-50 text-orange-600 text-[10px] font-bold rounded border border-orange-100">高性价比</span>
-                    <span className="px-2 py-1 bg-orange-50 text-orange-600 text-[10px] font-bold rounded border border-orange-100">近地铁</span>
+                    <span className="px-2 py-1 bg-orange-50 text-orange-600 text-[10px] font-bold rounded border border-orange-100">房源A,推荐理由:xxxxxxx</span>
+                    <span className="px-2 py-1 bg-orange-50 text-orange-600 text-[10px] font-bold rounded border border-orange-100">房源B,推荐理由xxxxxxxx</span>
                  </div>
               </div>
 
               <div className="p-3 bg-white rounded-xl border border-slate-200 shadow-sm">
                  <div className="text-xs font-bold text-blue-500 uppercase mb-2 flex items-center gap-2">
-                    <i className="fas fa-file-alt"></i> 辅助资料 (Materials)
+                    <i className="fas fa-file-alt"></i> 辅助资料
                  </div>
                  <div className="grid grid-cols-2 gap-2">
-                    <div className="text-center p-1.5 bg-blue-50 rounded border border-blue-100 text-[10px] text-blue-600 font-bold">楼盘测评.pdf</div>
+                    <div className="text-center p-1.5 bg-blue-50 rounded border border-blue-100 text-[10px] text-blue-600 font-bold">小区测评.pdf</div>
                     <div className="text-center p-1.5 bg-blue-50 rounded border border-blue-100 text-[10px] text-blue-600 font-bold">学区政策.docx</div>
                  </div>
               </div>
