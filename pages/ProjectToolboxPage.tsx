@@ -103,7 +103,7 @@ const ProjectToolboxPage: React.FC = () => {
                   <h4 className="text-sm font-bold text-slate-700">规范与思路的坚持</h4>
                </div>
                <p className="text-xs text-slate-500 leading-relaxed font-medium">
-                  项目初期坚持让设计提供稳定规范，虽然这一决策在后期因项目进度导致了较多调教成本，但事实证明 <strong>AI 工程化的思路</strong> 是完全正确的，标准化的输入是自动化产出的基石。
+                  项目推进过程中，让设计提供设计规范，虽然样式不突出，但是相对稳定项目进度导致了较多调教成本，但事实证明 <strong>AI 工程化的思路</strong> 是正确的，标准化的能力复用构建是高效高质产出的基石。
                </p>
             </div>
             
@@ -123,7 +123,7 @@ const ProjectToolboxPage: React.FC = () => {
                   <h4 className="text-sm font-bold text-slate-700">生产级工具验证</h4>
                </div>
                <p className="text-xs text-slate-500 leading-relaxed font-medium">
-                  尽管当时模型（如 Gemini-3）尚未完全成熟，但实际数据反馈良好，证明了业务目标方向正确。AI 已完全具备作为 <strong>生产级工具</strong> 的能力，随着熟练度提升，将大幅缩减生产环节与成本。
+                  当时没能用到模型（Gemini-3），功能数据反馈良好，证明了业务目标方向正确。AI 已完全具备作为 <strong>生产级工具</strong> 的能力，随着模型迭代，使用能力提升，生产效率能得到显著提升。
                </p>
             </div>
          </div>

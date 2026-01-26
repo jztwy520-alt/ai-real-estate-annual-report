@@ -27,7 +27,7 @@ const StrategyRefactoringPage: React.FC = () => {
           transition={{ delay: 0.1 }}
           className="text-xl text-slate-600 max-w-3xl"
         >
-          稳定内核 + 原子化操作技能，重塑中后台生产力
+          稳定业务流程SOP + 原子化企业级SKILLS，重塑生产力
         </motion.p>
       </header>
 

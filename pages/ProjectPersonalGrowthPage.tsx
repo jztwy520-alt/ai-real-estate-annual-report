@@ -25,11 +25,11 @@ const ProjectPersonalGrowthPage: React.FC = () => {
              <div className="p-2 bg-blue-100 rounded-lg text-blue-600 shadow-sm">
                <i className="fas fa-toolbox"></i>
              </div>
-             <h3 className="text-xl font-display font-bold text-slate-800">工具赋能与提效</h3>
+             <h3 className="text-xl font-display font-bold text-slate-800"> 认知跃迁</h3>
            </div>
            <div className="space-y-8 flex-1">
               <div>
-                 <h4 className="text-base font-bold text-slate-700 mb-2">1. 洞察力增强</h4>
+                 <h4 className="text-base font-bold text-slate-700 mb-2">洞察力重构</h4>
                  <p className="text-sm text-slate-500 mb-3 leading-relaxed font-medium">
                     利用 Coze 等工具搭建分析智能体，快速处理海量录音与反馈，将用户画像描摹从“经验判断”转向<span className="text-blue-600 font-bold text-base">“数据实证”</span>。
                  </p>
@@ -39,10 +39,10 @@ const ProjectPersonalGrowthPage: React.FC = () => {
                  </div>
               </div>
               <div>
-                 <h4 className="text-base font-bold text-slate-700 mb-2">2. 需求定义标准化</h4>
+                 <h4 className="text-base font-bold text-slate-700 mb-2">需求标准重塑</h4>
                  <p className="text-sm text-slate-500 mb-3 leading-relaxed font-medium">
-                    基于 <span className="text-blue-600 font-bold">Prompt 与上下文内容要求</span>，结合业务经验辅助生成内容设计思路与角度。
-                    <br/>向开发侧输出更标准的“生产需求”，而非模糊的“功能需求”。
+                     需求不再是简单的界面堆砌，而是通过 Prompt <span className="text-blue-600 font-bold">与上下文内容要求</span> 建立标准化的人机交互协议。
+                    <br/>通过定义高质量的“输入契约”，从源头确保研发落地的内容质量与效率。
                  </p>
                  <div className="flex gap-2">
                     <span className="px-2 py-1 bg-slate-50 rounded-lg text-xs text-slate-500 border border-slate-200 font-bold shadow-sm">Prompt Design</span>
@@ -60,22 +60,22 @@ const ProjectPersonalGrowthPage: React.FC = () => {
              <div className="p-2 bg-purple-100 rounded-lg text-purple-600 shadow-sm">
                <i className="fas fa-code"></i>
              </div>
-             <h3 className="text-xl font-display font-bold text-slate-800">工程化思维与实践</h3>
+             <h3 className="text-xl font-display font-bold text-slate-800">能力升维</h3>
            </div>
            <div className="space-y-8 flex-1">
               <div>
-                 <h4 className="text-base font-bold text-slate-700 mb-2">3. 深入技术实现</h4>
+                 <h4 className="text-base font-bold text-slate-700 mb-2">逻辑共创</h4>
                  <p className="text-sm text-slate-500 mb-3 leading-relaxed font-medium">
-                    打破边界，通过AI Design Coding 项目 深入 IDE 参与核心逻辑验证。不再只提“我要什么”，而是能评估“需要能做什么”以及“AI能力边界” 生产效率革命。
+                    打破边界，通过AI Design Coding 项目 深入 IDE 参与核心逻辑验证。不再只关心“我要什么”，而是通过验证核心逻辑与评估“AI 能力边界”，与研发共同定义技术可行性，驱动生产效率革命。
                  </p>
                  <div className="flex gap-2">
                     <span className="px-2 py-1 bg-slate-50 rounded-lg text-xs text-slate-500 border border-slate-200 font-bold shadow-sm">Model Evaluation</span>
                  </div>
               </div>
               <div>
-                 <h4 className="text-base font-bold text-slate-700 mb-2">4. 复杂系统决策</h4>
+                 <h4 className="text-base font-bold text-slate-700 mb-2">价值平衡</h4>
                  <p className="text-sm text-slate-500 mb-3 leading-relaxed font-medium">
-                    在 IM 智能回复等项目中，综合考量模型效果与成本、上下文工程与质量平衡、验收标准与试跑，做出更符合全局业务利益的决策。
+                    在 IM 智能回复等项目中，而是综合考量模型效果、推理成本、上下文工程与质量平衡。通过建立“多维评价指标”，做出符合全局商业利益的决策。
                  </p>
               </div>
            </div>
@@ -90,22 +90,22 @@ const ProjectPersonalGrowthPage: React.FC = () => {
              <div className="p-2 bg-indigo-100 rounded-lg text-indigo-600 shadow-sm">
                <i className="fas fa-brain"></i>
              </div>
-             <h3 className="text-xl font-display font-bold text-slate-800">产品架构与体系重塑</h3>
+             <h3 className="text-xl font-display font-bold text-slate-800">架构重塑</h3>
            </div>
            <div className="space-y-8 flex-1">
               <div>
-                 <h4 className="text-base font-bold text-slate-700 mb-2">5. 业务能力原子化</h4>
+                 <h4 className="text-base font-bold text-slate-700 mb-2">资产原子化</h4>
                  <p className="text-sm text-slate-500 mb-3 leading-relaxed font-medium">
-                    思考如何将业务流程拆解为可复用的 <span className="text-indigo-600 font-bold text-base">Atomic Skills</span>，构建企业级能力市场，而非堆砌单点功能。
+                    将复杂业务逻辑解构为可复用、进化的原子 <span className="text-indigo-600 font-bold text-base">Atomic Skills</span>，通过 Agentic 实现从“功能累加”向“智能编排”的范式转变。
                  </p>
                  <div className="flex gap-2">
                     <span className="px-2 py-1 bg-slate-50 rounded-lg text-xs text-slate-500 border border-slate-200 font-bold shadow-sm">Agentic Workflow</span>
                  </div>
               </div>
               <div>
-                 <h4 className="text-base font-bold text-slate-700 mb-2">6. 职责重定义</h4>
+                 <h4 className="text-base font-bold text-slate-700 mb-2">身份跃迁</h4>
                  <p className="text-sm text-slate-500 mb-3 leading-relaxed font-medium">
-                    从“功能交付者”转型为 <span className="text-indigo-600 font-bold text-base">“业务模型架构师”</span> + <span className="text-indigo-600 font-bold text-base">“AI 效能工程师”</span>。
+                    从“功能交付者”转型为 <span className="text-indigo-600 font-bold text-base">“业务模型架构师”</span> + <span className="text-indigo-600 font-bold text-base">与“AI 效能工程师”</span>。
                  </p>
               </div>
            </div>

@@ -19,7 +19,7 @@ const StrategyOverviewPage: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           className="text-5xl font-display font-bold text-slate-800 mb-4"
         >
-          2026 规划：AI 驱动的私域闭环与原子化skills
+          2026 规划：AI 驱动的私域闭环与企业级SKILLS建设
         </motion.h1>
         <motion.p 
           initial={{ opacity: 0, y: 20 }}
@@ -141,9 +141,9 @@ const StrategyOverviewPage: React.FC = () => {
                     <Blocks className="w-24 h-24 text-indigo-600" />
                  </div>
                  <div className="text-xs font-bold text-indigo-600 uppercase mb-3 tracking-wider bg-indigo-50 inline-block px-2 py-1 rounded">Infrastructure</div>
-                 <h4 className="text-xl font-bold text-slate-800 mb-2">原子化后台重构</h4>
+                 <h4 className="text-xl font-bold text-slate-800 mb-2">业务SOP+SKILLS</h4>
                  <p className="text-sm text-slate-600 leading-relaxed">
-                    稳定内核 + Skills 原子化操作层，实现后台管理的高效运维与快速迭代。
+                    梳理业务流程 + 拆分建设企业级Skills技能，实现的高效运营与快速迭代。
                  </p>
               </div>
            </div>
